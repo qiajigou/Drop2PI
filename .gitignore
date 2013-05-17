@@ -13,6 +13,9 @@
 *.un~
 *.txt
 *.db
+nohup.out
+*.out
 local_config.py
 static/js/components
 dropbox_token.txt
+config.py

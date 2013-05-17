@@ -31,7 +31,7 @@ class File:
         return '%s%s' % (PATH_TO_WATCH, self.path)
 
     def save(self):
-        download(self.path, self.save_to_dir)
+        return download(self.path, self.save_to_dir)
 
     def is_exists(self):
         try:
