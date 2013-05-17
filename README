@@ -1,0 +1,6 @@
+This is a simple client for Raspberry to connect with Dropbox
+
+1. edit config.py
+2. run auth.py
+3. go to the web and click "OK"
+4. continue
