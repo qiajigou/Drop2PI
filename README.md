@@ -39,7 +39,11 @@ ZH-CN:
 
 You have to install [Watchdog](https://github.com/gorakhargosh/watchdog) first.
 
+	sudo pip install watchdog
+
 And also download Dropbox python SDK [HERE](https://www.dropbox.com/developers/core/sdk).
+
+	pip install dropbox
 
 ## Setup ##
 

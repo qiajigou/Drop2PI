@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 APP_KEY     = ''
 APP_SECRET  = ''
 ACCESS_TYPE = 'app_folder'
@@ -9,3 +10,5 @@ PATH_TO_WATCH = '/Users/guojing/.dropbox-sync'
 MD5_PATH = PATH_TO_WATCH + '-md5'
 AUTO_SYNC_TIME = 60 * 1
 MAX_DOWNLOAD_FILE_SIZE = 1024 * 5
+
+DELETE_LOCAL_FILE = True

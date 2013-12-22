@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from utils import get_auth_url_and_token, set_token
 
 url, token = get_auth_url_and_token()

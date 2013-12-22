@@ -2,8 +2,10 @@
 import os
 import sys
 import socket
-from config import PATH_TO_WATCH
-from utils import get_client, parse_file_dir, md5_for_file
+from config import (PATH_TO_WATCH,
+                    DELETE_LOCAL_FILE)
+from utils import get_client, parse_file_dir
+
 
 def upload(file_name, as_file_name):
     print "uploading %s to %s" % (file_name, as_file_name)
@@ -19,6 +21,7 @@ def upload(file_name, as_file_name):
         print 'Error %s' % e
         f.close()
 
+
 def create_folder(path):
     print 'create folder %s' % path
     socket.setdefaulttimeout(10)
@@ -27,6 +30,7 @@ def create_folder(path):
         client.file_create_folder(path)
     except Exception, e:
         print 'Error %s' % e
+
 
 def delete(path):
     print 'delete %s' % path
@@ -45,6 +49,7 @@ def delete(path):
     except:
         pass
 
+
 def move(path, to_path):
     print 'move %s to %s' % (path, to_path)
     socket.setdefaulttimeout(10)
@@ -53,6 +58,7 @@ def move(path, to_path):
         client.file_move(path, to_path)
     except Exception, e:
         print 'Error %s' % e
+
 
 def check_dir_deleted(path=''):
     socket.setdefaulttimeout(10)
@@ -66,7 +72,10 @@ def check_dir_deleted(path=''):
 
     _check_delete(path)
 
+
 def _check_delete(path):
+    if not DELETE_LOCAL_FILE:
+        return
     client = get_client()
     if path == PATH_TO_WATCH:
         return
@@ -76,10 +85,7 @@ def _check_delete(path):
         if m.get('is_deleted'):
             delete(path)
     except:
-        try:
-            delete(path)
-        except:
-            pass
+        pass
 
 if __name__ == "__main__":
     args = sys.argv

@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import os, time
+import os
+import time
 from datetime import datetime
 from downloader import download
+
 
 class File:
 
@@ -10,19 +12,21 @@ class File:
         return '<Dropbox File %s>' % self.path
 
     def __init__(self, size, rev, thumb_exists, bytes,
-            modified, mime_type, path, is_dir, icon, root,
-            client_mtime, revision):
+                 modified, mime_type, path, is_dir, icon, root,
+                 client_mtime, revision):
         self.size = size
         self.rev = rev
         self.thumb_exists = thumb_exists
         self.bytes = bytes
-        self.modified = datetime.strptime(modified, '%a, %d %b %Y %H:%M:%S +0000')
+        self.modified = datetime.strptime(modified,
+                                          '%a, %d %b %Y %H:%M:%S +0000')
         self.mime_type = mime_type
         self.path = path
         self.is_dir = is_dir
         self.icon = icon
         self.root = root
-        self.client_mtime = datetime.strptime(client_mtime, '%a, %d %b %Y %H:%M:%S +0000')
+        self.client_mtime = datetime.strptime(client_mtime,
+                                              '%a, %d %b %Y %H:%M:%S +0000')
         self.revision = revision
 
     @property
@@ -45,6 +49,6 @@ class File:
         if not self.is_exists():
             return
         (mode, ino, dev, nlink, uid, gid, size,
-                atime, mtime, ctime) = os.stat(self.save_to_dir)
+         atime, mtime, ctime) = os.stat(self.save_to_dir)
         t = time.ctime(mtime)
         return datetime.strptime(t, "%a %b %d %H:%M:%S %Y")
