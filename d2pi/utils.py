@@ -4,13 +4,16 @@ from config import APP_KEY, APP_SECRET, ACCESS_TYPE, TOKEN_FILE
 
 sess = session.DropboxSession(APP_KEY, APP_SECRET, ACCESS_TYPE)
 
+
 def get_session():
     return sess
+
 
 def get_auth_url_and_token():
     request_token = sess.obtain_request_token()
     url = sess.build_authorize_url(request_token)
     return url, request_token
+
 
 def set_token(request_token):
     access_token = sess.obtain_access_token(request_token)
@@ -21,6 +24,7 @@ def set_token(request_token):
     except Exception, e:
         token_file.close()
         print 'Can not write to file %s - Error %s' % (TOKEN_FILE, e)
+
 
 def get_token():
     try:
@@ -33,12 +37,14 @@ def get_token():
         print 'Can not read token file %s - Error %s' % (TOKEN_FILE, e)
         return None, None
 
+
 def get_client():
     token_key, token_secret = get_token()
     if token_key and token_secret:
         sess.set_token(token_key, token_secret)
         c = client.DropboxClient(sess)
         return c
+
 
 def parse_file_dir(file_path):
     '''
@@ -48,7 +54,8 @@ def parse_file_dir(file_path):
     f = file_path.split('/')
     return f[-1]
 
-def md5_for_file(f, block_size=2**20):
+
+def md5_for_file(f, block_size=2 ** 20):
     import hashlib
     md5 = hashlib.md5()
     while True:
@@ -57,4 +64,3 @@ def md5_for_file(f, block_size=2**20):
             break
         md5.update(data)
     return md5.digest()
-

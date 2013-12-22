@@ -3,13 +3,14 @@
 import os
 from utils import get_client
 
+
 class Folder:
 
     def __repr__(self):
         return '<Dropbox Folder %s>' % self.path
 
     def __init__(self, hash, thumb_exists, bytes,
-            path, is_dir, icon, root, contents):
+                 path, is_dir, icon, root, contents):
         self.hash = hash
         self.thumb_exists = thumb_exists
         self.bytes = bytes
@@ -46,7 +47,7 @@ class Folder:
                 root = c.get('root')
                 contents = c.get('contents')
                 rs.append((hash, thumb_exists, bytes,
-                    path, is_dir, icon, root, contents))
+                           path, is_dir, icon, root, contents))
             else:
                 if c.get('is_dir'):
                     continue
@@ -59,12 +60,12 @@ class Folder:
                 path = c.get('path')
                 is_dir = c.get('is_dir')
                 icon = c.get('icon')
-                root =c.get('root')
+                root = c.get('root')
                 client_mtime = c.get('client_mtime')
                 revision = c.get('revision')
                 rs.append((size, rev, thumb_exists, bytes,
-                    modified, mime_type, path, is_dir, icon, root,
-                    client_mtime, revision))
+                           modified, mime_type, path, is_dir,
+                           icon, root, client_mtime, revision))
         return rs
 
     @classmethod
@@ -80,7 +81,7 @@ class Folder:
         root = md.get('root')
         contents = md.get('contents')
         return cls(hash, thumb_exists, bytes,
-                path, is_dir, icon, root, contents)
+                   path, is_dir, icon, root, contents)
 
     @property
     def save_to_dir(self):

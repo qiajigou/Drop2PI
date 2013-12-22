@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
+
 import socket
-from utils import get_client, parse_file_dir, md5_for_file
+from utils import get_client, md5_for_file
 
 
 def download(file_path, save_to_path):

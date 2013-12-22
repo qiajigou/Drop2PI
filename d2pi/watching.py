@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
-import sys, os, time
+
+import os
+import time
+import sys
 from folder import Folder
 from config import PATH_TO_WATCH, AUTO_SYNC_TIME
 from uploader import upload, delete, move, create_folder, check_dir_deleted
 import logging
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler
+
 
 def sync(folder):
     for f in folder.files:
@@ -16,16 +20,19 @@ def sync(folder):
         d.save()
         sync(d)
 
+
 def init():
     if not os.path.exists(PATH_TO_WATCH):
         print 'mkdir %s' % PATH_TO_WATCH
         os.makedirs(PATH_TO_WATCH)
+
 
 def clean():
     return
     if os.path.exists(PATH_TO_WATCH):
         print 'rm -rf %s' % PATH_TO_WATCH
         os.system('rm -rf %s' % PATH_TO_WATCH)
+
 
 def sync_download():
     try:
@@ -34,6 +41,7 @@ def sync_download():
         sync(f)
     except:
         pass
+
 
 def sync_upload(event):
     try:
@@ -44,6 +52,7 @@ def sync_upload(event):
             upload(path, dropbox_path)
     except:
         pass
+
 
 def sync_upload_create(event):
     try:
@@ -57,6 +66,7 @@ def sync_upload_create(event):
     except:
         pass
 
+
 def sync_upload_delete(event):
     try:
         path = event.src_path
@@ -66,16 +76,18 @@ def sync_upload_delete(event):
     except:
         pass
 
+
 def sync_upload_move(event):
     try:
         print dir(event)
         dropbox_to_path = event.dest_path.replace(PATH_TO_WATCH, '')
         dropbox_from_path = event.src_path.replace(PATH_TO_WATCH, '')
         print 'file moved from %s to %s, updating...' % (dropbox_from_path,
-            dropbox_to_path)
+                                                         dropbox_to_path)
         move(dropbox_from_path, dropbox_to_path)
     except:
         pass
+
 
 def go_watch():
     try:
@@ -141,4 +153,3 @@ if __name__ == '__main__':
     if watch:
         while True:
             go_watch()
-
