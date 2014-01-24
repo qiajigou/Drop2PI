@@ -89,6 +89,13 @@ def sync_upload_move(event):
         pass
 
 
+def sync_any_event(event):
+    '''
+    any event on a dir
+    this method will be called
+    '''
+
+
 def go_watch():
     try:
         print 'Start watching %s' % PATH_TO_WATCH
@@ -103,6 +110,7 @@ def go_watch():
         event_handler.on_deleted = sync_upload_delete
         event_handler.on_created = sync_upload_create
         event_handler.on_moved = sync_upload_move
+        event_handler.on_any_event = sync_any_event
         time_loop = 1
         try:
             while True:

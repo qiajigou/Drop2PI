@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from dropbox import client, session
-from config import APP_KEY, APP_SECRET, ACCESS_TYPE, TOKEN_FILE
+from config import APP_KEY, APP_SECRET, ACCESS_TYPE, TOKEN_FILE, DEBUG
 
 sess = session.DropboxSession(APP_KEY, APP_SECRET, ACCESS_TYPE)
 
@@ -28,11 +28,15 @@ def set_token(request_token):
 
 def get_token():
     try:
-        print 'Reading %s' % TOKEN_FILE
-        with open(TOKEN_FILE) as f:
-            token_key, token_secret = f.read().split('|')
-            f.close()
-            return token_key, token_secret
+        if not getattr(get_token, '_token', None):
+            get_token._token = None
+            if DEBUG:
+                print 'Reading %s' % TOKEN_FILE
+            with open(TOKEN_FILE) as f:
+                token_key, token_secret = f.read().split('|')
+                f.close()
+                get_token._token = (token_key, token_secret)
+        return get_token._token[0], get_token._token[1]
     except Exception, e:
         print 'Can not read token file %s - Error %s' % (TOKEN_FILE, e)
         return None, None
