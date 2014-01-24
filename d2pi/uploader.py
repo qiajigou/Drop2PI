@@ -10,16 +10,25 @@ from utils import get_client, parse_file_dir
 def upload(file_name, as_file_name):
     print "uploading %s to %s" % (file_name, as_file_name)
     socket.setdefaulttimeout(10)
+    f = None
+    try:
+        f = open(file_name)
+    except:
+        return
+    if not f:
+        return
     try:
         client = get_client()
         if not client:
             return
-        f = open(file_name)
         client.put_file(as_file_name, f, overwrite=True)
         print 'uploaded'
+        return True
     except Exception, e:
         print 'Error %s' % e
+    finally:
         f.close()
+    return False
 
 
 def create_folder(path):
@@ -28,8 +37,10 @@ def create_folder(path):
     client = get_client()
     try:
         client.file_create_folder(path)
+        return True
     except Exception, e:
         print 'Error %s' % e
+        return False
 
 
 def delete(path):
@@ -46,8 +57,9 @@ def delete(path):
             os.rmdir(path)
         else:
             os.remove(path)
+        return True
     except:
-        pass
+        return False
 
 
 def move(path, to_path):
@@ -56,8 +68,10 @@ def move(path, to_path):
     client = get_client()
     try:
         client.file_move(path, to_path)
+        return True
     except Exception, e:
         print 'Error %s' % e
+        return False
 
 
 def check_dir_deleted(path=''):

@@ -54,17 +54,17 @@ def sync_upload(event):
         pass
 
 
-def sync_upload_create(event):
+def sync_upload_create(event, path=None):
     try:
-        path = event.src_path
+        path = path or event.src_path
         dropbox_path = path.replace(PATH_TO_WATCH, '')
         print 'file %s created, updating...' % dropbox_path
         if event.is_directory:
             create_folder(dropbox_path)
         else:
             upload(path, dropbox_path)
-    except:
-        pass
+    except Exception, e:
+        print e
 
 
 def sync_upload_delete(event):
@@ -79,13 +79,16 @@ def sync_upload_delete(event):
 
 def sync_upload_move(event):
     try:
-        print dir(event)
         dropbox_to_path = event.dest_path.replace(PATH_TO_WATCH, '')
         dropbox_from_path = event.src_path.replace(PATH_TO_WATCH, '')
         print 'file moved from %s to %s, updating...' % (dropbox_from_path,
                                                          dropbox_to_path)
-        move(dropbox_from_path, dropbox_to_path)
-    except:
+        r = move(dropbox_from_path, dropbox_to_path)
+        # if not moved then measn server did not have file
+        # so upload renamed file to server
+        if not r:
+            sync_upload_create(event, path=PATH_TO_WATCH+dropbox_to_path)
+    except Exception:
         pass
 
 
