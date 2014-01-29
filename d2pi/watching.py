@@ -84,10 +84,10 @@ def sync_upload_move(event):
         print 'file moved from %s to %s, updating...' % (dropbox_from_path,
                                                          dropbox_to_path)
         r = move(dropbox_from_path, dropbox_to_path)
-        # if not moved then measn server did not have file
+        # if not moved then means server did not have file
         # so upload renamed file to server
         if not r:
-            sync_upload_create(event, path=PATH_TO_WATCH+dropbox_to_path)
+            sync_upload_create(event, path=PATH_TO_WATCH + dropbox_to_path)
     except Exception:
         pass
 

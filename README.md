@@ -1,3 +1,11 @@
+## IMPORTANT ##
+
+watchdog is needed in this lib, but a [bug](https://github.com/GuoJing/Drop2PI/issues/5) was found in latest watchdog (2014.1.29 version 0.7.0), in Mac OS, if you replace a file in `Finder`, it will cause two events, first one is delete, then another one is create, so in drop to pi, this will delete file in server if you replace file in `Finder`. Command in command line like `mv` and `cp` will NOT have this problem.
+
+So I download the watchdog to the code and add filter in fsevents.py. If you don't need it, just remove the watchdog folder.
+
+But still need to install watchdog, because file `_watchdog_fsevents.so` is needed.
+
 ## Drop2PI ##
 
 First, sorry for bad English.
