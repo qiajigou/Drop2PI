@@ -2,14 +2,15 @@
 import sys
 
 import socket
-from utils import get_client, md5_for_file
+from config import config
+from utils import md5_for_file
 
 
 def download(file_path, save_to_path):
     socket.setdefaulttimeout(10)
     if '/' == save_to_path[-1]:
         save_to_path = save_to_path[:-1]
-    client = get_client()
+    client = config.client
     if not client:
         return
     f, m = client.get_file_and_metadata(file_path)

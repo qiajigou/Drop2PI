@@ -4,7 +4,7 @@ import os
 import time
 import sys
 from folder import Folder
-from config import PATH_TO_WATCH, AUTO_SYNC_TIME
+from config import config
 from uploader import upload, delete, move, create_folder, check_dir_deleted
 import logging
 from watchdog.observers import Observer
@@ -22,16 +22,16 @@ def sync(folder):
 
 
 def init():
-    if not os.path.exists(PATH_TO_WATCH):
-        print 'mkdir %s' % PATH_TO_WATCH
-        os.makedirs(PATH_TO_WATCH)
+    if not os.path.exists(config.path_to_watch):
+        print 'mkdir %s' % config.path_to_watch
+        os.makedirs(config.path_to_watch)
 
 
 def clean():
     return
-    if os.path.exists(PATH_TO_WATCH):
-        print 'rm -rf %s' % PATH_TO_WATCH
-        os.system('rm -rf %s' % PATH_TO_WATCH)
+    if os.path.exists(config.path_to_watch):
+        print 'rm -rf %s' % config.path_to_watch
+        os.system('rm -rf %s' % config.path_to_watch)
 
 
 def sync_download():
@@ -47,30 +47,30 @@ def sync_upload(event):
     try:
         if not event.is_directory:
             path = event.src_path
-            dropbox_path = path.replace(PATH_TO_WATCH, '')
+            dropbox_path = path.replace(config.path_to_watch, '')
             print 'file %s changed, updating...' % dropbox_path
             upload(path, dropbox_path)
     except:
         pass
 
 
-def sync_upload_create(event, path=None):
+def sync_upload_create(event):
     try:
-        path = path or event.src_path
-        dropbox_path = path.replace(PATH_TO_WATCH, '')
+        path = event.src_path
+        dropbox_path = path.replace(config.path_to_watch, '')
         print 'file %s created, updating...' % dropbox_path
         if event.is_directory:
             create_folder(dropbox_path)
         else:
             upload(path, dropbox_path)
-    except Exception, e:
-        print e
+    except:
+        pass
 
 
 def sync_upload_delete(event):
     try:
         path = event.src_path
-        dropbox_path = path.replace(PATH_TO_WATCH, '')
+        dropbox_path = path.replace(config.path_to_watch, '')
         print 'file %s deleted, updating...' % dropbox_path
         delete(dropbox_path)
     except:
@@ -79,16 +79,13 @@ def sync_upload_delete(event):
 
 def sync_upload_move(event):
     try:
-        dropbox_to_path = event.dest_path.replace(PATH_TO_WATCH, '')
-        dropbox_from_path = event.src_path.replace(PATH_TO_WATCH, '')
+        print dir(event)
+        dropbox_to_path = event.dest_path.replace(config.path_to_watch, '')
+        dropbox_from_path = event.src_path.replace(config.path_to_watch, '')
         print 'file moved from %s to %s, updating...' % (dropbox_from_path,
                                                          dropbox_to_path)
-        r = move(dropbox_from_path, dropbox_to_path)
-        # if not moved then means server did not have file
-        # so upload renamed file to server
-        if not r:
-            sync_upload_create(event, path=PATH_TO_WATCH + dropbox_to_path)
-    except Exception:
+        move(dropbox_from_path, dropbox_to_path)
+    except:
         pass
 
 
@@ -100,49 +97,38 @@ def sync_any_event(event):
 
 
 def go_watch():
+    print 'Start watching %s' % config.path_to_watch
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
+    event_handler = LoggingEventHandler()
+    observer = Observer()
+    observer.schedule(event_handler, config.path_to_watch, recursive=True)
+    observer.start()
+    event_handler.on_modified = sync_upload
+    event_handler.on_deleted = sync_upload_delete
+    event_handler.on_created = sync_upload_create
+    event_handler.on_moved = sync_upload_move
+    event_handler.on_any_event = sync_any_event
+    time_loop = 1
     try:
-        print 'Start watching %s' % PATH_TO_WATCH
-        logging.basicConfig(level=logging.INFO,
-                            format='%(asctime)s - %(message)s',
-                            datefmt='%Y-%m-%d %H:%M:%S')
-        event_handler = LoggingEventHandler()
-        observer = Observer()
-        observer.schedule(event_handler, PATH_TO_WATCH, recursive=True)
-        observer.start()
-        event_handler.on_modified = sync_upload
-        event_handler.on_deleted = sync_upload_delete
-        event_handler.on_created = sync_upload_create
-        event_handler.on_moved = sync_upload_move
-        event_handler.on_any_event = sync_any_event
-        time_loop = 1
-        try:
-            while True:
-                time.sleep(1)
-                time_loop += 1
-                if not time_loop % AUTO_SYNC_TIME:
-                    print 'Auto sync every %s second' % AUTO_SYNC_TIME
-                    if not observer.event_queue.unfinished_tasks:
-                        sync_download()
-                        check_dir_deleted()
-                    print 'Auto check downloaded file or folder'
+        while True:
+            time.sleep(1)
+            time_loop += 1
+            if not time_loop % config.auto_aync_time and config.auto_check:
+                print 'Auto sync every %s second' % config.auto_aync_time
+                if not observer.event_queue.unfinished_tasks:
+                    sync_download()
                     check_dir_deleted()
-        except KeyboardInterrupt:
-            print 'End watching.'
-            observer.stop()
-        observer.join()
-    except Exception, e:
-        print '*' * 10
-        print e
-        print '*' * 10
-        return
+                print 'Auto check downloaded file or folder'
+                check_dir_deleted()
+    except KeyboardInterrupt:
+        print 'End watching.'
+        observer.stop()
+    observer.join()
 
-if __name__ == '__main__':
-    print '******************************************'
-    print '        THANKS FOR USING DROP2PI'
-    print '         GUOJING soundbbg@gmail'
-    print '           thanks to bettylwx'
-    print '******************************************'
-    print 'Starting...'
+
+def _start():
     init()
     args = sys.argv
     args = args[1:]
@@ -164,3 +150,15 @@ if __name__ == '__main__':
     if watch:
         while True:
             go_watch()
+
+if __name__ == '__main__':
+    print '******************************************'
+    print '        THANKS FOR USING DROP2PI'
+    print '         GUOJING soundbbg@gmail'
+    print '           thanks to bettylwx'
+    print '******************************************'
+    print 'Starting...'
+    if not config.is_useable():
+        print 'ERROR: Please set config of %s' % config.filename
+    else:
+        _start()

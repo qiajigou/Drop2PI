@@ -2,81 +2,65 @@
 import os
 import sys
 import socket
-from config import (PATH_TO_WATCH,
-                    DELETE_LOCAL_FILE)
-from utils import get_client, parse_file_dir
+from config import config
+from utils import parse_file_dir
 
 
 def upload(file_name, as_file_name):
     print "uploading %s to %s" % (file_name, as_file_name)
     socket.setdefaulttimeout(10)
-    f = None
+    client = config.client
     try:
-        f = open(file_name)
-    except:
-        return
-    if not f:
-        return
-    try:
-        client = get_client()
         if not client:
             return
-        client.put_file(as_file_name, f, overwrite=True)
-        print 'uploaded'
-        return True
+        with open(file_name, 'r') as f:
+            client.put_file(as_file_name, f, overwrite=True)
+            print 'uploaded'
     except Exception, e:
         print 'Error %s' % e
-    finally:
-        f.close()
-    return False
 
 
 def create_folder(path):
     print 'create folder %s' % path
     socket.setdefaulttimeout(10)
-    client = get_client()
+    client = config.client
     try:
         client.file_create_folder(path)
-        return True
     except Exception, e:
         print 'Error %s' % e
-        return False
 
 
 def delete(path):
     print 'delete %s' % path
     socket.setdefaulttimeout(10)
-    client = get_client()
+    client = config.client
     try:
         client.file_delete(path)
     except Exception, e:
         print 'Error %s' % e
     try:
-        path = PATH_TO_WATCH + path
+        path = config.path_to_watch + path
         if os.path.isdir(path):
             os.rmdir(path)
         else:
             os.remove(path)
-        return True
     except:
-        return False
+        pass
 
 
 def move(path, to_path):
     print 'move %s to %s' % (path, to_path)
     socket.setdefaulttimeout(10)
-    client = get_client()
+    client = config.client
     try:
         client.file_move(path, to_path)
-        return True
     except Exception, e:
         print 'Error %s' % e
-        return False
 
 
 def check_dir_deleted(path=''):
     socket.setdefaulttimeout(10)
-    path = path or PATH_TO_WATCH
+    path = path or config.path_to_watch
 
     for l in os.listdir(path):
         tmp_path = path + '/' + l
@@ -88,12 +72,12 @@ def check_dir_deleted(path=''):
 
 
 def _check_delete(path):
-    if not DELETE_LOCAL_FILE:
+    if not config.delete_local_file:
         return
-    client = get_client()
-    if path == PATH_TO_WATCH:
+    if path == config.path_to_watch:
         return
-    path = path.replace(PATH_TO_WATCH, '')
+    path = path.replace(config.path_to_watch, '')
+    client = config.client
     try:
         m = client.metadata(path)
         if m.get('is_deleted'):
