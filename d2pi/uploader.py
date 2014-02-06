@@ -13,12 +13,11 @@ def upload(file_name, as_file_name):
     try:
         if not client:
             return
-        f = open(file_name)
-        client.put_file(as_file_name, f, overwrite=True)
-        print 'uploaded'
+        with open(file_name, 'r') as f:
+            client.put_file(as_file_name, f, overwrite=True)
+            print 'uploaded'
     except Exception, e:
         print 'Error %s' % e
-        f.close()
 
 
 def create_folder(path):
