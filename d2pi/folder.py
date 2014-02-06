@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import os
-from utils import get_client
+
+from config import config
 
 
 class Folder:
@@ -70,7 +71,7 @@ class Folder:
 
     @classmethod
     def get_by_path(cls, path):
-        client = get_client()
+        client = config.client
         md = client.metadata(path)
         hash = md.get('hash')
         thumb_exists = md.get('thumb_exists')
