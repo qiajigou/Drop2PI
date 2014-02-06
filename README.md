@@ -28,13 +28,9 @@ You can install by download the source or
 
 	python setup.py install
 	
-or (not done)
+or
 
 	pip install d2pi
-
-or (not done)
-
-	easy_install d2pi
 
 
 ## V 0.0.4 ##
@@ -50,8 +46,6 @@ or (not done)
 
 
 ## Packages ##
-
-依赖的包：
 
 You have to install [Watchdog](https://github.com/gorakhargosh/watchdog) first.
 
