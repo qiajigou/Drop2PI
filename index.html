@@ -29,135 +29,104 @@
       </header>
       <section>
         <h2>
+<a name="important" class="anchor" href="#important"><span class="octicon octicon-link"></span></a>IMPORTANT</h2>
+
+<p>watchdog is needed in this lib, but a <a href="https://github.com/GuoJing/Drop2PI/issues/5">bug</a> was found in latest watchdog (2014.1.29 version 0.7.0), in Mac OS, if you replace a file in <code>Finder</code>, it will cause two events, first one is delete, then another one is create, so in drop to pi, this will delete file in server if you replace file in <code>Finder</code>. Command in command line like <code>mv</code> and <code>cp</code> will NOT have this problem.</p>
+
+<p>So I download the watchdog to the code and add filter in fsevents.py. If you don't need it, just remove the watchdog folder.</p>
+
+<p>But still need to install watchdog, because file <code>_watchdog_fsevents.so</code> is needed.</p>
+
+<h2>
 <a name="drop2pi" class="anchor" href="#drop2pi"><span class="octicon octicon-link"></span></a>Drop2PI</h2>
 
-<p>First, sorry for bad English.</p>
+<p>Sorry for bad English.</p>
 
 <p>This is a very simple tool to sync files between Dropbox and Raspberry PI. In fact this command tools can used any system running on Python.</p>
 
 <p>But I only wants to sync files to Raspberry PI. So I called this Dropbox to PI.</p>
 
 <h2>
-<a name="drop2pi-%E4%B8%AD%E6%96%87" class="anchor" href="#drop2pi-%E4%B8%AD%E6%96%87"><span class="octicon octicon-link"></span></a>Drop2PI 中文</h2>
-
-<p>Drop2PI是树莓派和Dropbox同步的一个非常简单的小工具，因为Dropbox并不支持ARM，所以用Python简单的实现了一个Dropbox客户端，可以在树莓派使用。</p>
-
-<h2>
-<a name="whats-new" class="anchor" href="#whats-new"><span class="octicon octicon-link"></span></a>What's New</h2>
+<a name="overall" class="anchor" href="#overall"><span class="octicon octicon-link"></span></a>Overall</h2>
 
 <ol>
 <li>download the file and folder auto.</li>
 <li>modify the folder, auto sync to Dropbox.</li>
 <li>delete the file or folder which deleted in Dropbox server auto.</li>
-</ol><p>ZH-CN:</p>
+</ol><h2>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h2>
+
+<p>You can install by download the source or</p>
+
+<pre><code>python setup.py install
+</code></pre>
+
+<p>or</p>
+
+<pre><code>pip install d2pi
+</code></pre>
+
+<h2>
+<a name="v-004" class="anchor" href="#v-004"><span class="octicon octicon-link"></span></a>V 0.0.4</h2>
 
 <ol>
-<li>自动下载文件和文件夹</li>
-<li>修改本地文件和文件夹，会同步到Dropbox里</li>
-<li>删除文件或文件夹，会自动删除Dropbox服务器里的文件</li>
+<li>set config at ~/.d2pi/config.yml</li>
+<li>new dropbox auth method (flow)</li>
 </ol><h2>
 <a name="need-to-do" class="anchor" href="#need-to-do"><span class="octicon octicon-link"></span></a>Need to do</h2>
 
 <ol>
 <li>config the max donload file size.</li>
 <li>if there is syncing event, quit update event. (see known bug)</li>
-</ol><p>ZH-CN:</p>
-
-<ol>
-<li>配置最大的下载文件，文件过大就不下载</li>
-<li>如果正在同步，则取消更新服务</li>
 </ol><h2>
 <a name="packages" class="anchor" href="#packages"><span class="octicon octicon-link"></span></a>Packages</h2>
 
-<p>依赖的包：</p>
-
 <p>You have to install <a href="https://github.com/gorakhargosh/watchdog">Watchdog</a> first.</p>
 
+<pre><code>sudo pip install watchdog
+</code></pre>
+
 <p>And also download Dropbox python SDK <a href="https://www.dropbox.com/developers/core/sdk">HERE</a>.</p>
+
+<pre><code>pip install dropbox
+</code></pre>
+
+<p>And yaml.</p>
 
 <h2>
 <a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h2>
 
 <h4>
-<a name="config-file--%E7%94%9F%E6%88%90%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6" class="anchor" href="#config-file--%E7%94%9F%E6%88%90%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="octicon octicon-link"></span></a>config file / 生成配置文件</h4>
+<a name="init" class="anchor" href="#init"><span class="octicon octicon-link"></span></a>init</h4>
 
-<pre><code>cp config.py.tmp config.py
+<pre><code>python auth.py 
 </code></pre>
 
-<h4>
-<a name="edit-config--%E7%BC%96%E8%BE%91%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6" class="anchor" href="#edit-config--%E7%BC%96%E8%BE%91%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="octicon octicon-link"></span></a>edit config / 编辑配置文件</h4>
+<p>or</p>
 
-<p>open config file and you can see code below:</p>
-
-<pre><code>APP_KEY     = 'xj0so6fatvhx4xb'
-APP_SECRET  = 'zlwh6p1xvp9f5lk'
-ACCESS_TYPE = 'app_folder'
-TOKEN_FILE  = 'dropbox_token.txt'
-PATH_TO_WATCH = '/Users/guojing/.dropbox-sync'
+<pre><code>from d2pi import auth
+auth.auth()
 </code></pre>
-
-<p>你需要去 <a href="https://www.dropbox.com/developers/apps">Dropbox Develop Page</a> 创建一个APP，然后使用APP里的APP_KEY, APP_SECRET, ACCESS_TYPE。</p>
 
 <p>You have to go to <a href="https://www.dropbox.com/developers/apps">Dropbox Develop Page</a> to create a App.</p>
 
 <p>After created a App, you can find the APP_KEY and APP_SECRET, ACCESS_TYPE is also needed.</p>
 
-<p>PATH_TO_WATCH is the directory that sync with Dropbox.</p>
+<p>you can edit your config file at <code>~/.d2pi/config.yml</code>, path_to_watch is the dir you want to watch.</p>
 
 <h4>
-<a name="run-authpy--%E8%AE%A4%E8%AF%81" class="anchor" href="#run-authpy--%E8%AE%A4%E8%AF%81"><span class="octicon octicon-link"></span></a>run auth.py / 认证</h4>
-
-<pre><code>python auth.py
-</code></pre>
-
-<p>It will ask you open a link in Browser, and just do what Dropbox ask. Then you can get the token file.</p>
-
-<h4>
-<a name="run-watchingpy--%E8%BF%90%E8%A1%8C" class="anchor" href="#run-watchingpy--%E8%BF%90%E8%A1%8C"><span class="octicon octicon-link"></span></a>run watching.py / 运行</h4>
+<a name="run-watchingpy" class="anchor" href="#run-watchingpy"><span class="octicon octicon-link"></span></a>run watching.py</h4>
 
 <pre><code>python watching.py
+</code></pre>
+
+<p>or</p>
+
+<pre><code>from d2pi import watching
+watching.go_watch()
 </code></pre>
 
 <p>This will watch dir <code>PATH_TO_WATCH</code>, and any changes like <code>create</code>, <code>modify</code>, <code>delete</code> and <code>move</code> will change the file in Dropbox.</p>
-
-<h4>
-<a name="commands--%E5%91%BD%E4%BB%A4" class="anchor" href="#commands--%E5%91%BD%E4%BB%A4"><span class="octicon octicon-link"></span></a>commands / 命令</h4>
-
-<p>Download all the files and start to watch the folder.</p>
-
-<pre><code>python watching.py
-</code></pre>
-
-<p>Clean the sync folder (remove it) and re-download the latest files.</p>
-
-<pre><code>python watching.py -c
-</code></pre>
-
-<p>Download the latest files but do not watch it. The script will exit after download the files.</p>
-
-<pre><code>python watching.py -e
-</code></pre>
-
-<p>Watch but not download, will update file to server.</p>
-
-<pre><code>python watching.py -r
-</code></pre>
-
-<h3>
-<a name="something-you-can-do-yourself" class="anchor" href="#something-you-can-do-yourself"><span class="octicon octicon-link"></span></a>something you can do yourself</h3>
-
-<p>I wrote some super easy interface like upload, download, delete, move. After you get the token, you can do it in python command line like</p>
-
-<pre><code>from uploader import upload
-upload(file_name, as_file_name)
-</code></pre>
-
-<p>or you can run the file like:</p>
-
-<pre><code>python uploader.py file_to_upload as_file
-</code></pre>
-
-<p>So if this watching.py is not what you want, I think it's very easy to be the one you really need.</p>
 
 <h3>
 <a name="my-pi" class="anchor" href="#my-pi"><span class="octicon octicon-link"></span></a>My PI</h3>
