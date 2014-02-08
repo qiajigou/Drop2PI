@@ -76,7 +76,10 @@ auto_check: true
 
     @property
     def path_to_watch(self):
-        return str(self._conf.get('path_to_watch', ''))
+        path = str(self._conf.get('path_to_watch', ''))
+        if path[-1] == '/':
+            path = path[:-1]
+        return path
 
     @property
     def access_type(self):

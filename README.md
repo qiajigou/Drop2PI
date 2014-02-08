@@ -32,6 +32,10 @@ or
 
 	pip install d2pi
 
+## V 0.0.5 ##
+
+1. make it OO
+2. replace print to logging
 
 ## V 0.0.4 ##
 
@@ -83,8 +87,9 @@ you can edit your config file at `~/.d2pi/config.yml`, path_to_watch is the dir 
 	
 or
 
-	from d2pi import watching
-	watching.go_watch()
+	from d2pi import watch
+	watcher = watch.Watcher()
+	watcher.run()
 
 This will watch dir `PATH_TO_WATCH`, and any changes like `create`, `modify`, `delete` and `move` will change the file in Dropbox.
 

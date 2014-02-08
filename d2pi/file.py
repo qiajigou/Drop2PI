@@ -6,7 +6,7 @@ from datetime import datetime
 from downloader import download
 
 
-class File:
+class File(object):
 
     def __repr__(self):
         return '<Dropbox File %s>' % self.path

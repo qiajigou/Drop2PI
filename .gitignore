@@ -13,6 +13,7 @@
 *.un~
 *.txt
 *.db
+*.log
 nohup.out
 *.out
 local_config.py

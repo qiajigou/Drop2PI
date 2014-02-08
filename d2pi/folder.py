@@ -5,7 +5,7 @@ import os
 from config import config
 
 
-class Folder:
+class Folder(object):
 
     def __repr__(self):
         return '<Dropbox Folder %s>' % self.path
