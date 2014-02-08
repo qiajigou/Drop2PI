@@ -28,8 +28,6 @@ def get_logger(path=None):
         logger = logging.getLogger('d2pi')
         logger.setLevel(logging.INFO)
         log_file = 'd2pi.log'
-        if path:
-            log_file = path + 'd2pi.log'
         fh = logging.FileHandler(log_file)
         ch = logging.StreamHandler()
         formatter = logging.Formatter(
