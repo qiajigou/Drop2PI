@@ -9,6 +9,7 @@ auth.auth()
 
 # then
 
-from d2pi import watching
+from d2pi import watch
 
-watching.go_watch()
+watcher = watch.Watcher()
+watcher.run()
