@@ -29,15 +29,6 @@
       </header>
       <section>
         <h2>
-<a name="important" class="anchor" href="#important"><span class="octicon octicon-link"></span></a>IMPORTANT</h2>
-
-<p>watchdog is needed in this lib, but a <a href="https://github.com/GuoJing/Drop2PI/issues/5">bug</a> was found in latest watchdog (2014.1.29 version 0.7.0), in Mac OS, if you replace a file in <code>Finder</code>, it will cause two events, first one is delete, then another one is create, so in drop to pi, this will delete file in server if you replace file in <code>Finder</code>. Command in command line like <code>mv</code> and <code>cp</code> will NOT have this problem.</p>
-
-<p>So I download the watchdog to the code and add filter in fsevents.py. If you don't need it, ignore this.</p>
-
-<p>If this really matter to you, please install <a href="https://github.com/GuoJing/watchdog">watchdog</a> here.</p>
-
-<h2>
 <a name="drop2pi" class="anchor" href="#drop2pi"><span class="octicon octicon-link"></span></a>Drop2PI</h2>
 
 <p>Sorry for bad English.</p>
