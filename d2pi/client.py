@@ -55,15 +55,6 @@ class Client(object):
             client.file_delete(path)
         except Exception, e:
             logger.error('Error %s' % e)
-        try:
-            path = config.path_to_watch + path
-            if os.path.isdir(path):
-                os.rmdir(path)
-            else:
-                os.remove(path)
-            logger.info('deleted')
-        except:
-            pass
 
     @classmethod
     def move(cls, path, to_path):
