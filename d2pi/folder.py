@@ -95,7 +95,7 @@ class Folder(object):
         if self.is_exists():
             print('%s exists' % self.save_to_dir)
             return
-        print 'mkdir %s' % self.save_to_dir
+        print('mkdir %s' % self.save_to_dir)
         os.makedirs(self.save_to_dir)
         f = Folder.get_by_path(self.path)
         self = f

@@ -40,8 +40,8 @@ class Client(object):
         client = config.client
         try:
             client.file_create_folder(path)
-        except Exception, e:
-            logger.error(e)
+        except:
+            logger.error('create folder error')
 
     @classmethod
     def delete(cls, path):
@@ -53,8 +53,8 @@ class Client(object):
         client = config.client
         try:
             client.file_delete(path)
-        except Exception, e:
-            logger.error('Error %s' % e)
+        except:
+            logger.error('delete file error')
 
     @classmethod
     def move(cls, path, to_path):
@@ -66,8 +66,8 @@ class Client(object):
         client = config.client
         try:
             client.file_move(path, to_path)
-        except Exception, e:
-            logger.error(e)
+        except:
+            logger.error('move file error')
 
     @classmethod
     def download(cls, file_path, save_to_path):

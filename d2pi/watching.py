@@ -21,23 +21,23 @@ def run():
         if '-r' == args[0]:
             download = False
     if download:
-        print 'Start download files...'
+        print('Start download files...')
         w.sync_download()
         client.check_dir_deleted()
-        print 'Sync server end.'
-    print 'Start end.'
+        print('Sync server end.')
+    print('Start end.')
     if watch:
         while True:
             w.run()
 
 if __name__ == '__main__':
-    print '******************************************'
-    print '        THANKS FOR USING DROP2PI'
-    print '         GUOJING soundbbg@gmail'
-    print '           thanks to bettylwx'
-    print '******************************************'
-    print 'Starting...'
+    print('******************************************')
+    print('        THANKS FOR USING DROP2PI')
+    print('         GUOJING soundbbg@gmail')
+    print('           thanks to bettylwx')
+    print('******************************************')
+    print('Starting...')
     if not config.is_useable():
-        print 'ERROR: Please set config of %s' % config.filename
+        print('ERROR: Please set config of %s' % config.filename)
     else:
         run()

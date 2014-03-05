@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 
+# pylint: disable=E0602
+try:
+    input = raw_input
+except:
+    pass
+# pylint: enable=E0602
+
 
 def auth():
     from config import config
@@ -16,7 +23,7 @@ def auth():
     print('2. Click "Allow" (you might have to log in first)')
     print('3. Copy the authorization code.')
 
-    code = raw_input('Enter the authorization code here: ').strip()
+    code = input('Enter the authorization code here: ').strip()
 
     access_token, user_id = flow.finish(code)
 
