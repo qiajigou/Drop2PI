@@ -1,5 +1,7 @@
 ## Drop2PI ##
 
+[![Build Status](https://travis-ci.org/GuoJing/Drop2PI.png?branch=master)](https://travis-ci.org/GuoJing/Drop2PI)
+
 Sorry for bad English.
 
 This is a very simple tool to sync files between Dropbox and Raspberry PI. In fact this command tools can used any system running on Python.
