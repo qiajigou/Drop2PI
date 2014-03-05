@@ -4,6 +4,8 @@ import os
 
 from config import config
 
+# pylint: disable=E1103
+
 
 class Folder(object):
 
@@ -86,8 +88,8 @@ class Folder(object):
 
     @property
     def save_to_dir(self):
-        from config import PATH_TO_WATCH
-        return '%s%s' % (PATH_TO_WATCH, self.path)
+        from config import config
+        return '%s%s' % (config.path_to_watch, self.path)
 
     def save(self):
         if self.is_exists():
@@ -102,3 +104,5 @@ class Folder(object):
         if os.path.exists(self.save_to_dir):
             return True
         return False
+
+# pylint enable=E1103

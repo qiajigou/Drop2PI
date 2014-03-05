@@ -81,8 +81,10 @@ class Client(object):
         client = config.client
         if not client:
             return
+        # pylint: disable=E1103
         f, m = client.get_file_and_metadata(file_path)
         d = f.read()
+        # pylint: enable=E1103
         f_hash = ''
         try:
             with open(save_to_path) as f:
@@ -95,7 +97,9 @@ class Client(object):
             if f_hash == fd_hash:
                 return False
         except:
+            # pylint: disable=E1103
             f.close()
+            # pylint: enable=E1103
         logger.info('downloading %s and save to %s' % (file_path,
                                                        save_to_path))
         f = open(save_to_path, 'w')
@@ -133,9 +137,11 @@ class Client(object):
         path = path.replace(config.path_to_watch, '')
         client = config.client
         try:
+            # pylint: disable=E1103
             m = client.metadata(path)
             if m.get('is_deleted'):
                 cls.delete(path)
+            # pylint: enable=E1103
         except:
             pass
 

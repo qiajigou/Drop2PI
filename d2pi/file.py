@@ -31,8 +31,8 @@ class File(object):
 
     @property
     def save_to_dir(self):
-        from config import PATH_TO_WATCH
-        return '%s%s' % (PATH_TO_WATCH, self.path)
+        from config import config
+        return '%s%s' % (config.path_to_watch, self.path)
 
     def save(self):
         return download(self.path, self.save_to_dir)
