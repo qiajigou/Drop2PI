@@ -27,8 +27,8 @@ class Client(object):
             with open(file_name, 'r') as f:
                 client.put_file(as_file_name, f, overwrite=True)
             logger.info('uploaded')
-        except Exception, e:
-            logger.error(e)
+        except:
+            logger.error('upload erroe')
 
     @classmethod
     def create_folder(cls, path):

@@ -4,7 +4,7 @@
 def auth():
     from config import config
     if not config.is_useable():
-        print "CONFIG FILE %s ERROR, NOT APP NAME OR SECRET" % config.filename
+        print('CONFIG FILE %s ERROR, NOT APP NAME OR SECRET' % config.filename)
         return
 
     from dropbox import client
@@ -12,11 +12,11 @@ def auth():
                                               config.app_secret)
     authorize_url = flow.start()
 
-    print '1. Go to: ' + authorize_url
-    print '2. Click "Allow" (you might have to log in first)'
-    print '3. Copy the authorization code.'
+    print('1. Go to: ' + authorize_url)
+    print('2. Click "Allow" (you might have to log in first)')
+    print('3. Copy the authorization code.')
 
-    code = raw_input("Enter the authorization code here: ").strip()
+    code = raw_input('Enter the authorization code here: ').strip()
 
     access_token, user_id = flow.finish(code)
 
