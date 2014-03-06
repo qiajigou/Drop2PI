@@ -1,6 +1,6 @@
 ## Drop2PI ##
 
-[![Build Status](https://travis-ci.org/GuoJing/Drop2PI.png?branch=master)](https://travis-ci.org/GuoJing/Drop2PI)
+[![Build Status](https://travis-ci.org/GuoJing/Drop2PI.png?branch=master)](https://travis-ci.org/GuoJing/Drop2PI) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/GuoJing/drop2pi/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 Sorry for bad English.
 
