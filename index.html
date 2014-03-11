@@ -8,13 +8,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="/style/css/bootstrap.css" type="text/css" media="screen">
 <script type="text/javascript" src="/style/jquery-1.7.1.min.js"></script>
-
-
 <link rel="stylesheet" href="/style/style.css" type="text/css">
-
-  <meta content="GuoJing的博客，关于设计，开发以及生活。" name="description"/>
-  <meta content="设计,开发,思考,生活,豆瓣,读书,电影,音乐,游记" name="keywords"/>
+<meta content="GuoJing的博客，关于设计，开发以及生活。" name="description"/>
+<meta content="设计,开发,思考,生活,豆瓣,读书,电影,音乐,游记" name="keywords"/>
+<script>
+ $(document).ready(function(){
+	$('.nav a').hover(
+		function(){
+			$(this).animate({opacity: 0.3}, 400)
+		}, 
+		function(){
+			$(this).animate({opacity: 1}, 400)
+		});
+ });
+ function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
+ }
+</script>
+<style>
+    .content img {
+        width: auto;
+    }
+</style>
 </head>
+
 <body>
 
 <div class="container">
@@ -23,23 +42,6 @@
   <li><a href="/">Blog</a></li>
   <li><a href="https://github.com/GuoJing/Drop2PI">Github</a></li>
  </ul> 
-<script>
-$(document).ready(function(){
-	$('.nav a').hover(
-		function(){
-			$(this).animate({opacity: 0.3}, 400)
-		}, 
-		function(){
-			$(this).animate({opacity: 1}, 400)
-		});
-});
-function getURLParameter(name) {
-    return decodeURI(
-        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
-    );
-}
-</script>
-
 </div>
 
 <div class="main clearfix">
