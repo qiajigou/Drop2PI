@@ -1,0 +1,172 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Drop2Pi Project</title>
+  <meta charset="utf-8" />
+<link rel="alternate" type="application/atom+xml" title="Recent Entries" href="http://localhost:1313/feed.xml">
+<link rel="icon" href="http://localhost:1313/images/icons/avatar.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="http://localhost:1313/style/css/bootstrap.css" type="text/css" media="screen">
+<script type="text/javascript" src="http://localhost:1313/style/jquery-1.7.1.min.js"></script>
+
+
+<link rel="stylesheet" href="http://localhost:1313/style/style.css" type="text/css">
+
+  <meta content="GuoJing的博客，关于设计，开发以及生活。" name="description"/>
+  <meta content="设计,开发,思考,生活,豆瓣,读书,电影,音乐,游记" name="keywords"/>
+</head>
+<body>
+
+<div class="container">
+<div class="banner">
+ <ul class="nav nav-pills">
+  <li><a href="http://localhost:1313/">Blog</a></li>
+  <li><a href="https://github.com/GuoJing/Drop2PI">Github</a></li>
+ </ul> 
+<script>
+$(document).ready(function(){
+	$('.nav a').hover(
+		function(){
+			$(this).animate({opacity: 0.3}, 400)
+		}, 
+		function(){
+			$(this).animate({opacity: 1}, 400)
+		});
+});
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
+}
+</script>
+
+</div>
+
+<div class="main clearfix">
+
+
+<div class="posts">
+<div class="title">Drop2Pi</div>
+<div class="content">
+
+<p>This is a very simple tool to sync files between Dropbox and Raspberry PI. In fact this command tools can used any system running on Python.</p>
+
+<p>But I only wants to sync files to Raspberry PI. So I called this Dropbox to PI.</p>
+
+<h3>Overall</h3>
+
+<ol>
+<li>download the file and folder auto.</li>
+<li>modify the folder, auto sync to Dropbox.</li>
+<li>delete the file or folder which deleted in Dropbox server auto.</li>
+</ol>
+
+<h3>Install</h3>
+
+<p>You can install by download the source or</p>
+
+<pre><code>python setup.py install
+</code></pre>
+
+<p>or</p>
+
+<pre><code>pip install d2pi
+</code></pre>
+
+<h3>V 0.0.5</h3>
+
+<ol>
+<li>make it OO</li>
+<li>replace print to logging</li>
+</ol>
+
+<h3>V 0.0.4</h3>
+
+<ol>
+<li>set config at ~/.d2pi/config.yml</li>
+<li>new dropbox auth method (flow)</li>
+</ol>
+
+<h3>Need to do</h3>
+
+<ol>
+<li>config the max donload file size.</li>
+<li>if there is syncing event, quit update event. (see known bug)</li>
+</ol>
+
+<h3>Packages</h3>
+
+<p>You have to install <a href="https://github.com/gorakhargosh/watchdog">Watchdog</a> first.</p>
+
+<pre><code>sudo pip install watchdog
+</code></pre>
+
+<p>And also download Dropbox python SDK <a href="https://www.dropbox.com/developers/core/sdk">HERE</a>.</p>
+
+<pre><code>pip install dropbox
+</code></pre>
+
+<p>And yaml.</p>
+
+<h3>Setup</h3>
+
+<h4>init</h4>
+
+<pre><code>python auth.py 
+</code></pre>
+
+<p>or</p>
+
+<pre><code>from d2pi import auth
+auth.auth()
+</code></pre>
+
+<p>You have to go to <a href="https://www.dropbox.com/developers/apps">Dropbox Develop Page</a> to create a App.</p>
+
+<p>After created a App, you can find the APP<em>KEY and APP</em>SECRET, ACCESS_TYPE is also needed.</p>
+
+<p>you can edit your config file at <code>~/.d2pi/config.yml</code>, path<em>to</em>watch is the dir you want to watch.</p>
+
+<h4>run watching.py</h4>
+
+<pre><code>python watching.py
+</code></pre>
+
+<p>or</p>
+
+<pre><code>from d2pi import watch
+watcher = watch.Watcher()
+watcher.run()
+</code></pre>
+
+<p>This will watch dir <code>PATH_TO_WATCH</code>, and any changes like <code>create</code>, <code>modify</code>, <code>delete</code> and <code>move</code> will change the file in Dropbox.</p>
+
+<h3>My PI</h3>
+
+<p>I need to download some files in my PI, don&#39;t need to update or edit on PI. so I just need a cron running on watching.py -c.</p>
+
+<p>soundbbg at gmail</p>
+
+<p><a href="https://travis-ci.org/GuoJing/Drop2PI"><img src="https://travis-ci.org/GuoJing/Drop2PI.png?branch=master" alt="Build Status"></a></p>
+
+</div>
+
+<div class="footer">
+
+© Copryright by<a href="http://guojing.me/" target="_blank">GuoJing</a> 2012-2014 using <a href="http://www.github.com/" target="_blank">GitHub</a> and <a href="http://jekyllrb.com/" target="_blank">Jekyll</a>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-42721249-1', 'guojing.me');
+  ga('send', 'pageview');
+
+</script>
+</div>
+
+</div>
+</body>
+</html>
+
