@@ -43,6 +43,9 @@ class Config(object):
         ensure_dir(get_home('.d2pi'))
         with open(filename, 'r') as cfg:
             _conf = yaml.load(cfg)
+            if not isinstance(_conf, dict):
+                raise Exception('Error format of config file.'
+                                'Leave space between key and value.')
             return cls(_conf, filename)
 
     @classmethod
@@ -53,8 +56,12 @@ class Config(object):
         filename = get_home('.d2pi', filename)
         if not os.path.isfile(filename):
             with open(filename, 'w') as f:
-                f.write("""#Config of d2pi
-app_key:  %s
+                f.write("""# Config of d2pi
+# This file is auto generated
+# Just fill app_key and app_secret
+# Do not fill token
+# Leave space between key and value
+app_key: %s
 app_secret: %s
 access_type: %s
 token: %s
