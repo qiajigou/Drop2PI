@@ -12,7 +12,7 @@ from utils import get_logger
 from lock import set_lock, free_lock, get_lock
 from lock import set_upload_lock, free_upload_lock, get_upload_lock
 
-from queue import EventQueue
+from eventq import EventQueue
 
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler
