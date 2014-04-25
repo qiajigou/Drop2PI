@@ -12,13 +12,13 @@ from utils import get_logger
 from lock import set_lock, free_lock, get_lock
 from lock import set_upload_lock, free_upload_lock, get_upload_lock
 
-from queue import Queue
+from queue import EventQueue
 
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler
 
 logger = get_logger(config.path_to_watch)
-queue = Queue(100)
+queue = EventQueue(100)
 
 
 class Watcher(object):
