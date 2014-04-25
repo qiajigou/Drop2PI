@@ -3,7 +3,7 @@
 import os
 import time
 from datetime import datetime
-from downloader import download
+from client import Client
 
 
 class File(object):
@@ -35,7 +35,7 @@ class File(object):
         return '%s%s' % (config.path_to_watch, self.path)
 
     def save(self):
-        return download(self.path, self.save_to_dir)
+        return Client.download(self.path, self.save_to_dir)
 
     def is_exists(self):
         try:
