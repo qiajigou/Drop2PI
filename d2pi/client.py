@@ -113,7 +113,7 @@ class Client(object):
         '''
         check dir is is_deleted
         if is deleted in server
-        local path should be deleted to
+        local path should be deleted too
         but if config.delete_local_file is False
         this will not delete file
         '''

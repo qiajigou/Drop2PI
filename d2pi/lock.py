@@ -1,0 +1,46 @@
+# -*- coding: utf-8 -*-
+# this is a very simple lock
+
+
+def set_lock(_lock=True):
+    if not '_d2_lock' in globals():
+        global _d2_lock
+    _d2_lock = _lock
+
+
+def free_lock():
+    set_lock(_lock=False)
+
+
+def set_upload_lock(_lock=True):
+    if not '_d2_upload_lock' in globals():
+        global _d2_upload_lock
+    _d2_upload_lock = _lock
+
+
+def free_upload_lock():
+    set_upload_lock(_lock=False)
+
+
+def get_lock(name='_d2_lock'):
+    if name in globals():
+        return globals().get(name)
+    return False
+
+
+def get_upload_lock():
+    return get_lock('_d2_upload_lock')
+
+
+if __name__ == "__main__":
+    assert get_lock() is False
+    set_lock()
+    assert get_lock() is True
+    free_lock()
+    assert get_lock() is False
+
+    assert get_upload_lock() is False
+    set_upload_lock()
+    assert get_upload_lock() is True
+    free_upload_lock()
+    assert get_upload_lock() is False

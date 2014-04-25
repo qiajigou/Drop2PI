@@ -9,10 +9,16 @@ from config import config
 from client import client
 from utils import get_logger
 
+from lock import set_lock, free_lock, get_lock
+from lock import set_upload_lock, free_upload_lock, get_upload_lock
+
+from queue import Queue
+
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler
 
 logger = get_logger(config.path_to_watch)
+queue = Queue(100)
 
 
 class Watcher(object):
@@ -56,10 +62,14 @@ class Watcher(object):
         '''
         start to download all files in watching dir
         '''
+        if get_lock():
+            return
         try:
+            set_lock()
             self.init()
             f = Folder.get_by_path('/')
             self.sync(f)
+            free_lock()
         except:
             pass
 
@@ -67,12 +77,17 @@ class Watcher(object):
         '''
         upload event
         '''
+        if get_upload_lock():
+            logger.info('Uploading lock, will not upload this time')
+            return
         try:
+            set_lock()
             if not event.is_directory:
                 path = event.src_path
                 dropbox_path = path.replace(config.path_to_watch, '')
                 logger.info('file %s changed, updating...' % dropbox_path)
                 client.upload(path, dropbox_path)
+            free_lock()
         except:
             pass
 
@@ -80,7 +95,11 @@ class Watcher(object):
         '''
         create event
         '''
+        if get_upload_lock():
+            logger.info('Creating lock, will not upload this time')
+            return
         try:
+            set_lock()
             path = event.src_path
             dropbox_path = path.replace(config.path_to_watch, '')
             logger.info('file %s created, updating...' % dropbox_path)
@@ -88,6 +107,7 @@ class Watcher(object):
                 client.create_folder(dropbox_path)
             else:
                 client.upload(path, dropbox_path)
+            free_lock()
         except:
             pass
 
@@ -96,10 +116,12 @@ class Watcher(object):
         delete event
         '''
         try:
+            set_lock()
             path = event.src_path
             dropbox_path = path.replace(config.path_to_watch, '')
             logger.info('file %s deleted, updating...' % dropbox_path)
             client.delete(dropbox_path)
+            free_lock()
         except:
             pass
 
@@ -108,6 +130,7 @@ class Watcher(object):
         move event
         '''
         try:
+            set_lock()
             dropbox_to_path = event.dest_path.replace(config.path_to_watch,
                                                       '')
             dropbox_from_path = event.src_path.replace(config.path_to_watch,
@@ -115,6 +138,7 @@ class Watcher(object):
             logger.info('file moved from %s to %s, updating...' %
                         (dropbox_from_path, dropbox_to_path))
             client.move(dropbox_from_path, dropbox_to_path)
+            free_lock()
         except:
             pass
 
@@ -156,13 +180,17 @@ class Watcher(object):
                 time.sleep(1)
                 time_loop += 1
                 if not time_loop % config.auto_aync_time and config.auto_check:
+                    set_upload_lock()
+                    if get_lock():
+                        logger.info('Something is working, '
+                                    'not download right now...')
+                        continue
                     logger.info('Auto sync every %s second' %
                                 config.auto_aync_time)
-                    if not observer.event_queue.unfinished_tasks:
-                        self.sync_download()
-                        client.check_dir_deleted()
-                    logger.info('Auto check downloaded file or folder')
+                    self.sync_download()
                     client.check_dir_deleted()
+                    free_upload_lock()
+                    queue.run()
         except KeyboardInterrupt:
             logger.info('End watching.')
             observer.stop()
