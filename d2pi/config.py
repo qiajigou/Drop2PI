@@ -84,7 +84,7 @@ auto_check: true
     @property
     def path_to_watch(self):
         path = str(self._conf.get('path_to_watch', ''))
-        if path[-1] == '/':
+        if path and path[-1] == '/':
             path = path[:-1]
         return path
 
