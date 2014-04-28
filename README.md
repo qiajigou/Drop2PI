@@ -6,8 +6,9 @@ Sorry for bad English.
 
 This is a very simple tool to sync files between Dropbox and Raspberry PI. In fact this command tools can used any system running on Python.
 
-But I only wants to sync small files to Raspberry PI. So I called this Dropbox to PI.
+But I only wants to sync *small* files to Raspberry PI. So I called this Dropbox to PI.
 
+Big file is not well supported.
 
 ## Overall ##
 
