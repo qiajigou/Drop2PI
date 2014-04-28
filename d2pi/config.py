@@ -3,7 +3,6 @@
 # DEFAULT CONFIG
 
 AUTO_SYNC_TIME = 60 * 1
-MAX_DOWNLOAD_FILE_SIZE = 1024 * 5
 
 DELETE_LOCAL_FILE = False
 DEBUG = False
@@ -70,6 +69,7 @@ debug: false
 auto_aync_time: 60
 path_to_watch: ''
 auto_check: true
+download_max: 2097152
 """ % (app_key, app_secret, access_type, token))
         return cls.get(filename)
 
@@ -87,6 +87,11 @@ auto_check: true
         if path and path[-1] == '/':
             path = path[:-1]
         return path
+
+    @property
+    def download_max(self):
+        _max = 1024 * 1024 * 2
+        return int(self._conf.get('download_max', _max))
 
     @property
     def access_type(self):

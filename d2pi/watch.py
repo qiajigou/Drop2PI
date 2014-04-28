@@ -26,6 +26,9 @@ class Watcher(object):
     This is Watcher Object of DROP2PI
     '''
     observer = None
+    can_upload = True
+    can_download = True
+    can_delete = True
 
     def __repr__(self):
         return '<Watcher>'
@@ -62,6 +65,9 @@ class Watcher(object):
         '''
         start to download all files in watching dir
         '''
+        if not self.can_download:
+            logger.info('Download mode is disabled, will not download.')
+            return
         if get_lock():
             return
         try:
@@ -77,6 +83,9 @@ class Watcher(object):
         '''
         upload event
         '''
+        if not self.can_upload:
+            logger.info('Upload mode is disabled, will not upload.')
+            return
         if get_upload_lock():
             logger.info('Uploading lock, will not upload this time')
             return
@@ -95,6 +104,9 @@ class Watcher(object):
         '''
         create event
         '''
+        if not self.can_upload:
+            logger.info('Upload mode is disabled, will not upload.')
+            return
         if get_upload_lock():
             logger.info('Creating lock, will not upload this time')
             return
@@ -115,6 +127,10 @@ class Watcher(object):
         '''
         delete event
         '''
+        if not self.can_delete:
+            # disable delete files to server is safe mode
+            logger.info('Delete mode is disabled, will not delete.')
+            return
         try:
             set_lock()
             path = event.src_path
@@ -167,10 +183,28 @@ class Watcher(object):
         observer.schedule(event_handler, config.path_to_watch, recursive=True)
         return observer
 
-    def run(self):
+    def run(self, upload=True, download=True, delete=True):
         '''
         run watcher
+        if upload is True, new files will be upload
+        if upload is False, it's download only mode.
+        ----
+        if download is True, files will be downloaded
+        else files will not download.
+        ----
+        if delete is True, delete local file will delete remote
+        else is safe mode, for download only mode.
+
+        NOTE: by default, all options are True and you don't need to care
+        if you use this tool for only download and don't want others
+        remove your file, you can set delete to False.
         '''
+        self.can_upload = upload
+        self.can_download = download
+        self.can_delete = delete
+        if not upload:
+            self.can_delete = False
+
         observer = self.create_observer()
         observer.start()
 
