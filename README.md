@@ -26,6 +26,26 @@ or
 
 	pip install d2pi
 
+## V 0.0.9 ##
+
+**Changes**:
+
+1. add a very simple cache, it's dict in memory.
+2. better sync_download
+
+`sync_download` will be:
+
+1. check metadata and set hash to cache
+2. request dropbox with hash, it no change then return cache object
+
+this will be faster.
+
+and remove `check_dir_deleted`, it will search all folder and sync delete status, may blocked or broken by other events. now new `sync_download` method will handle that.
+
+If file in dropbox and status `is_deleted` is true, and files/folder exists in local, and config require remove local file, then remove local.
+
+If file exists in server with no change, return cache object.
+
 ## V 0.0.5 ##
 
 1. make it OO

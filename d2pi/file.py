@@ -13,7 +13,7 @@ class File(object):
 
     def __init__(self, size, rev, thumb_exists, bytes,
                  modified, mime_type, path, is_dir, icon, root,
-                 client_mtime, revision):
+                 client_mtime, revision, is_deleted):
         self.size = size
         self.rev = rev
         self.thumb_exists = thumb_exists
@@ -28,6 +28,7 @@ class File(object):
         self.client_mtime = datetime.strptime(client_mtime,
                                               '%a, %d %b %Y %H:%M:%S +0000')
         self.revision = revision
+        self.is_deleted = is_deleted
 
     @property
     def save_to_dir(self):
