@@ -35,6 +35,11 @@ class File(object):
         return '%s%s' % (config.path_to_watch, self.path)
 
     def save(self):
+        from config import config
+        if self.bytes > config.download_max:
+            # if file larger than 2M
+            # do not download big file
+            return
         return Client.download(self.path, self.save_to_dir)
 
     def is_exists(self):
