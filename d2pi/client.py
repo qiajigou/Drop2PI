@@ -107,7 +107,6 @@ class Client(object):
         if m.get('bytes', 0) > config.download_max:
             Client.prepare_download_bigfile(file_path)
             return
-        # pylint: enable=E1103
         logger.info('downloading %s and save to %s' % (file_path,
                                                        save_to_path))
         with f:
@@ -115,6 +114,7 @@ class Client(object):
             with open(save_to_path, 'w') as f:
                 f.write(d)
             logger.info('downloaded')
+        # pylint: enable=E1103
         return True
 
     @classmethod
@@ -125,8 +125,10 @@ class Client(object):
         '''
         client = config.client
         try:
+            # pylint: disable=E1103
             file_url = client.share(file_path)
             file_url = file_url.get('url', '')
+            # pylint: enable=E1103
             if file_url:
                 logger.info('file share to %s' % file_url)
                 Client.download_bigfile(file_url)
