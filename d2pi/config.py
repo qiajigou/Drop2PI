@@ -70,6 +70,7 @@ auto_aync_time: 60
 path_to_watch: ''
 auto_check: true
 download_max: 2097152
+upload_max: 4194304
 """ % (app_key, app_secret, access_type, token))
         return cls.get(filename)
 
@@ -92,6 +93,18 @@ download_max: 2097152
     def download_max(self):
         _max = 1024 * 1024 * 2
         return int(self._conf.get('download_max', _max))
+
+    @property
+    def upload_max(self):
+        # if larger than 4,
+        # split it into chunk
+        _max = 1024 * 1024 * 4
+        return int(self._conf.get('upload_max', _max))
+
+    @property
+    def chunk_upload_max(self):
+        # max upload bytes
+        return 1024 * 1024 * 150
 
     @property
     def access_type(self):

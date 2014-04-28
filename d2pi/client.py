@@ -24,11 +24,32 @@ class Client(object):
         try:
             if not client:
                 return
-            with open(file_name, 'r') as f:
-                client.put_file(as_file_name, f, overwrite=True)
+            _size = os.path.getsize(file_name)
+            _large_file = False
+            if _size > config.chunk_upload_max:
+                logger.error('file size is limited, '
+                             'should not larger than %s',
+                             config.chunk_upload_max)
+                return
+            if _size > config.upload_max:
+                _large_file = True
+            if not _large_file:
+                with open(file_name, 'r') as f:
+                    client.put_file(as_file_name, f, overwrite=True)
+            else:
+                with open(file_name, 'rb') as f:
+                    uploader = client.get_chunked_uploader(f, _size)
+                    logger.info('upload big file size: %s' % _size)
+                    while uploader.offset < _size:
+                        try:
+                            logger.info('uploading offset %d' % uploader.offset)
+                            upload = uploader.upload_chunked()
+                        except:
+                            return
+                    uploader.finish(as_file_name)
             logger.info('uploaded')
         except:
-            logger.error('upload erroe')
+            logger.error('upload error')
 
     @classmethod
     def create_folder(cls, path):
@@ -83,30 +104,44 @@ class Client(object):
             return
         # pylint: disable=E1103
         f, m = client.get_file_and_metadata(file_path)
-        d = f.read()
+        if m.get('bytes', 0) > config.download_max:
+            Client.prepare_download_bigfile(file_path)
+            return
         # pylint: enable=E1103
-        f_hash = ''
-        try:
-            with open(save_to_path) as f:
-                f_hash = md5_for_file(f)
-        except:
-            pass
-        try:
-            f = open(save_to_path, 'rw')
-            fd_hash = md5_for_file(f)
-            if f_hash == fd_hash:
-                return False
-        except:
-            # pylint: disable=E1103
-            f.close()
-            # pylint: enable=E1103
         logger.info('downloading %s and save to %s' % (file_path,
                                                        save_to_path))
-        f = open(save_to_path, 'w')
-        f.write(d)
-        f.close()
-        logger.info('downloaded')
+        with f:
+            d = f.read()
+            with open(save_to_path, 'w') as f:
+                f.write(d)
+            logger.info('downloaded')
         return True
+
+    @classmethod
+    def prepare_download_bigfile(cls, file_path):
+        '''
+        if download a big file, then share file to a url
+        and call Client.download_bigfile
+        '''
+        client = config.client
+        try:
+            file_url = client.share(file_path)
+            file_url = file_url.get('url', '')
+            if file_url:
+                logger.info('file share to %s' % file_url)
+                Client.download_bigfile(file_url)
+            else:
+                logger.info('can not share')
+        except:
+            logger.error('file %s can not share' % file_path)
+
+    @classmethod
+    def download_bigfile(cls, file_url):
+        '''
+        overwrite this method to download big file
+        '''
+        logger.info('start download big file on url %s' % file_url)
+        logger.info('overwrite this method to download')
 
     @classmethod
     def check_dir_deleted(cls, path=''):
