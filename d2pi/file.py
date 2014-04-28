@@ -39,6 +39,11 @@ class File(object):
         if self.bytes > config.download_max:
             # if file larger than 2M
             # do not download big file
+            # try other way
+            try:
+                Client.prepare_download_bigfile(self.path)
+            except:
+                pass
             return
         return Client.download(self.path, self.save_to_dir)
 

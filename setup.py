@@ -18,7 +18,7 @@ You can get the code from `https://github.com/GuoJing/Drop2PI`
 
 setup(
     name='d2pi',
-    version='0.0.8',
+    version='0.0.9',
     license='GPLv3',
     description='Python library for Dropbox to Raspberry PI',
     long_description=install_description,
