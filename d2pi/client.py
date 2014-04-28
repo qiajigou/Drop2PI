@@ -3,7 +3,7 @@ import os
 import socket
 
 from config import config
-from utils import md5_for_file, get_logger
+from utils import get_logger
 
 logger = get_logger(config.path_to_watch)
 
@@ -42,8 +42,9 @@ class Client(object):
                     logger.info('upload big file size: %s' % _size)
                     while uploader.offset < _size:
                         try:
-                            logger.info('uploading offset %d' % uploader.offset)
-                            upload = uploader.upload_chunked()
+                            logger.info('uploading offset %d'
+                                        % uploader.offset)
+                            uploader.upload_chunked()
                         except:
                             return
                     uploader.finish(as_file_name)
@@ -175,7 +176,7 @@ class Client(object):
         client = config.client
         try:
             # pylint: disable=E1103
-            m = client.metadata(path)
+            m = client.metadata(path, include_deleted=True)
             if m.get('is_deleted'):
                 cls.delete(path)
             # pylint: enable=E1103

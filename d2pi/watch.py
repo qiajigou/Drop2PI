@@ -1,21 +1,19 @@
 # -*- coding: utf-8 -*-
 
+import logging
 import os
 import time
-import logging
-
-from folder import Folder
 from config import config
-from client import client
-from utils import get_logger
 
-from lock import set_lock, free_lock, get_lock
-from lock import set_upload_lock, free_upload_lock, get_upload_lock
-
-from eventq import EventQueue
-
-from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler
+from watchdog.observers import Observer
+
+from client import client
+from eventq import EventQueue
+from folder import Folder
+from lock import (free_lock, free_upload_lock, get_lock, get_upload_lock,
+                  set_lock, set_upload_lock)
+from utils import get_logger
 
 logger = get_logger(config.path_to_watch)
 queue = EventQueue(100)
@@ -47,11 +45,27 @@ class Watcher(object):
         '''
         for f in folder.files:
             f.save()
-        if not folder.dirs:
-            return
         for d in folder.dirs:
             d.save()
             self.sync(d)
+        if not self.can_delete:
+            return
+        if not config.delete_local_file:
+            return
+        for f in folder.deleted_files:
+            if f.path in ('/', config.path_to_watch):
+                continue
+            _path = config.path_to_watch + f.path
+            if os.path.exists(_path):
+                logger.info('rm %s' % _path)
+                os.system('rm %s' % _path)
+        for d in folder.deleted_dirs:
+            if f.path in ('/', config.path_to_watch):
+                continue
+            _path = config.path_to_watch + d.path
+            if os.path.exists(_path):
+                logger.info('rm -rf %s' % _path)
+                os.system('rm -rf %s' % _path)
 
     def clean(self):
         '''
@@ -218,11 +232,12 @@ class Watcher(object):
                     if get_lock():
                         logger.info('Something is working, '
                                     'not download right now...')
+                        free_upload_lock()
                         continue
                     logger.info('Auto sync every %s second' %
                                 config.auto_aync_time)
                     self.sync_download()
-                    client.check_dir_deleted()
+                    # client.check_dir_deleted()
                     free_upload_lock()
                     queue.run()
         except KeyboardInterrupt:
