@@ -89,9 +89,10 @@ class Watcher(object):
             self.init()
             f = Folder.get_by_path('/')
             self.sync(f)
-            free_lock()
         except:
             pass
+        finally:
+            free_lock()
 
     def sync_upload(self, event):
         '''
@@ -110,9 +111,10 @@ class Watcher(object):
                 dropbox_path = path.replace(config.path_to_watch, '')
                 logger.info('file %s changed, updating...' % dropbox_path)
                 client.upload(path, dropbox_path)
-            free_lock()
         except:
             pass
+        finally:
+            free_lock()
 
     def sync_create(self, event):
         '''
@@ -133,9 +135,10 @@ class Watcher(object):
                 client.create_folder(dropbox_path)
             else:
                 client.upload(path, dropbox_path)
-            free_lock()
         except:
             pass
+        finally:
+            free_lock()
 
     def sync_delete(self, event):
         '''
@@ -151,9 +154,10 @@ class Watcher(object):
             dropbox_path = path.replace(config.path_to_watch, '')
             logger.info('file %s deleted, updating...' % dropbox_path)
             client.delete(dropbox_path)
-            free_lock()
         except:
             pass
+        finally:
+            free_lock()
 
     def sync_move(self, event):
         '''
@@ -168,9 +172,10 @@ class Watcher(object):
             logger.info('file moved from %s to %s, updating...' %
                         (dropbox_from_path, dropbox_to_path))
             client.move(dropbox_from_path, dropbox_to_path)
-            free_lock()
         except:
             pass
+        finally:
+            free_lock()
 
     def sync_any_event(self, event):
         '''
@@ -244,3 +249,5 @@ class Watcher(object):
             logger.info('End watching.')
             observer.stop()
         observer.join()
+
+    watch = run
