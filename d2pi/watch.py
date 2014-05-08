@@ -46,7 +46,7 @@ class Watcher(object):
         for f in folder.files:
             f.save()
         for d in folder.dirs:
-            d.save()
+            d = d.save()
             self.sync(d)
         if not self.can_delete:
             return

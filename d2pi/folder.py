@@ -47,7 +47,8 @@ class Folder(object):
     def _dirs(self):
         rs = self._get_contents(need_dir=True)
         fs = [Folder(*r) for r in rs]
-        return [Folder.get_by_path(f.path) for f in fs]
+        return [Folder.get_by_path(f.path.encode('utf-8'))
+                for f in fs]
 
     @property
     def dirs(self):
@@ -102,12 +103,12 @@ class Folder(object):
         path = str(path)
         _cache = d2_dir_cache.get(path, None)
         _hash = None
-        try:
-            _hash = _cache.hash if _cache else None
-            if _cache and _cache.hash:
-                logger.info('cache hit for %s' % path)
-        except:
-            _hash = None
+        # try:
+        #     _hash = _cache.hash if _cache else None
+        #     if _cache and _cache.hash:
+        #         logger.info('cache hit for %s' % path)
+        # except:
+        #     _hash = None
         client = config.client
         try:
             md = client.metadata(path, hash=_hash, include_deleted=True)
@@ -120,7 +121,7 @@ class Folder(object):
             root = md.get('root')
             contents = md.get('contents')
             is_deleted = md.get('is_deleted', False)
-            logger.info('set cache for %s' % path)
+            # logger.info('set cache for %s' % path)
             r = cls(hash, thumb_exists, bytes,
                     path, is_dir, icon, root, contents,
                     is_deleted)
@@ -129,7 +130,7 @@ class Folder(object):
         except:
             # get metadata wish hash
             # if no change dropbox will raise exception
-            logger.info('return cache for %s' % path)
+            # logger.info('return cache for %s' % path)
             return _cache if _cache else None
 
     @property
@@ -138,13 +139,10 @@ class Folder(object):
         return '%s%s' % (config.path_to_watch, self.path)
 
     def save(self):
-        if self.is_exists():
-            print('%s exists' % self.save_to_dir)
-            return
-        print('mkdir %s' % self.save_to_dir)
-        os.makedirs(self.save_to_dir)
+        if not self.is_exists():
+            os.makedirs(self.save_to_dir)
         f = Folder.get_by_path(self.path)
-        self = f
+        return f
 
     def is_exists(self):
         if os.path.exists(self.save_to_dir):

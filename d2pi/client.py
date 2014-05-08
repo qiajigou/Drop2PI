@@ -5,6 +5,8 @@ import socket
 from config import config
 from utils import get_logger
 
+from cache import d2_files_list
+
 logger = get_logger(config.path_to_watch)
 
 
@@ -17,6 +19,13 @@ class Client(object):
         '''
         upload file_name to as_file_name
         '''
+        if '.DS_Store' in file_name:
+            return
+        try:
+            d2_files_list.remove(file_name)
+            d2_files_list.remove(as_file_name)
+        except:
+            pass
         socket.setdefaulttimeout(10)
         client = config.client
         logger.info('upload file %s to %s' % (file_name,
@@ -57,6 +66,10 @@ class Client(object):
         '''
         create folder
         '''
+        try:
+            d2_files_list.remove(path)
+        except:
+            pass
         logger.info('create folder %s' % path)
         socket.setdefaulttimeout(10)
         client = config.client
@@ -70,6 +83,10 @@ class Client(object):
         '''
         delete a path
         '''
+        try:
+            d2_files_list.remove(path)
+        except:
+            pass
         logger.info('delete %s' % path)
         socket.setdefaulttimeout(10)
         client = config.client
@@ -83,12 +100,18 @@ class Client(object):
         '''
         move file from path to to_path
         '''
+        try:
+            d2_files_list.remove(path)
+            d2_files_list.remove(to_path)
+        except:
+            pass
         logger.info('move %s to %s' % (path, to_path))
         socket.setdefaulttimeout(10)
         client = config.client
         try:
             client.file_move(path, to_path)
         except:
+            cls.delete(path)
             logger.error('move file error')
 
     @classmethod
@@ -97,6 +120,10 @@ class Client(object):
         download file from server
         from file_path to save_to_path
         '''
+        if d2_files_list.count(file_path):
+            logger.info('file %s in downloded list, not download'
+                        % file_path)
+            return
         socket.setdefaulttimeout(10)
         if '/' == save_to_path[-1]:
             save_to_path = save_to_path[:-1]
@@ -108,12 +135,14 @@ class Client(object):
         if m.get('bytes', 0) > config.download_max:
             Client.prepare_download_bigfile(file_path)
             return
+        d2_files_list.append(file_path)
         logger.info('downloading %s and save to %s' % (file_path,
                                                        save_to_path))
         with f:
             d = f.read()
             with open(save_to_path, 'w') as f:
                 f.write(d)
+            d2_files_list.append(save_to_path)
             logger.info('downloaded')
         # pylint: enable=E1103
         return True
