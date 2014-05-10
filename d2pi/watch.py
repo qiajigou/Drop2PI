@@ -3,17 +3,17 @@
 import logging
 import os
 import time
-from config import config
+from .config import config
 
 from watchdog.events import LoggingEventHandler
 from watchdog.observers import Observer
 
-from client import client
-from eventq import EventQueue
-from folder import Folder
-from lock import (free_lock, free_upload_lock, get_lock, get_upload_lock,
-                  set_lock, set_upload_lock)
-from utils import get_logger
+from .client import client
+from .eventq import EventQueue
+from .folder import Folder
+from .lock import (free_lock, free_upload_lock, get_lock, get_upload_lock,
+                   set_lock, set_upload_lock)
+from .utils import get_logger
 
 logger = get_logger(config.path_to_watch)
 queue = EventQueue(100)

@@ -26,6 +26,9 @@ class _D2FilesListCache(object):
             return True
         return False
 
+    # for python 3
+    __bool__ = __nonzero__
+
     def set(self, val):
         self._l.append(val)
 

@@ -7,7 +7,7 @@ except:
     pass
 # pylint: enable=E0602
 
-from config import config
+from .config import config
 
 
 def warn(overwrite=False):

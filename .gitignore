@@ -22,4 +22,3 @@ dropbox_token.txt
 build
 *.egg-info
 dist
-test*.py
