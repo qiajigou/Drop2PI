@@ -34,12 +34,14 @@ downloader:
 downloader will only download files to local automatically.
 
 uploader:
+
 	from d2pi.watch import uploader
 	uploader.run()
 
 uplodaer will only upload files.
 
 watcher with auto download:
+
 	from d2pi.watch import watcher
     watcher.run()
 
