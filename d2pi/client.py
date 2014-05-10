@@ -227,7 +227,12 @@ class Client(object):
         if path == config.path_to_watch:
             return
         local_path = path
-        path = path.replace(config.path_to_watch, '')
+        try:
+            path = path.replace(config.path_to_watch, '')
+        except:
+            path = path.decode()
+            path = path.replace(config.path_to_watch, '')
+            path = path.encode()
         client = config.client
         try:
             # pylint: disable=E1103
