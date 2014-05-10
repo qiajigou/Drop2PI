@@ -2,10 +2,10 @@
 import os
 import socket
 
-from config import config
-from utils import get_logger
+from .config import config
+from .utils import get_logger
 
-from cache import d2_files_list
+from .cache import d2_files_list
 
 logger = get_logger(config.path_to_watch)
 
