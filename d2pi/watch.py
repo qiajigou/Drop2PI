@@ -112,6 +112,11 @@ class Watcher(object):
             set_lock()
             if not event.is_directory:
                 path = event.src_path
+                try:
+                    if type(path) is not str:
+                        path = path.decode('utf-8')
+                except:
+                    pass
                 dropbox_path = path.replace(config.path_to_watch, '')
                 logger.info('file %s changed, updating...' % dropbox_path)
                 client.upload(path, dropbox_path)
@@ -133,6 +138,11 @@ class Watcher(object):
         try:
             set_lock()
             path = event.src_path
+            try:
+                if type(path) is not str:
+                    path = path.decode('utf-8')
+            except:
+                pass
             dropbox_path = path.replace(config.path_to_watch, '')
             logger.info('file %s created, updating...' % dropbox_path)
             if event.is_directory:
@@ -155,6 +165,11 @@ class Watcher(object):
         try:
             set_lock()
             path = event.src_path
+            try:
+                if type(path) is not str:
+                    path = path.decode('utf-8')
+            except:
+                pass
             dropbox_path = path.replace(config.path_to_watch, '')
             logger.info('file %s deleted, updating...' % dropbox_path)
             client.delete(path, dropbox_path)
@@ -169,10 +184,17 @@ class Watcher(object):
         '''
         try:
             set_lock()
-            dropbox_to_path = event.dest_path.replace(config.path_to_watch,
-                                                      '')
-            dropbox_from_path = event.src_path.replace(config.path_to_watch,
-                                                       '')
+            try:
+                if type(event.dest_path) is not str:
+                    event.dest_path = event.dest_path.decode('utf-8')
+                if type(event.src_path) is not str:
+                    event.src_path = event.src_path.decode('utf-8')
+            except:
+                pass
+            dropbox_to_path = event.dest_path.replace(
+                config.path_to_watch, '')
+            dropbox_from_path = event.src_path.replace(
+                config.path_to_watch, '')
             local_path = event.dest_path
             client.move(local_path, dropbox_from_path, dropbox_to_path)
         except:
