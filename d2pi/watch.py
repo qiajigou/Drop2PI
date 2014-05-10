@@ -24,12 +24,16 @@ class Watcher(object):
     This is Watcher Object of DROP2PI
     '''
     observer = None
-    can_upload = True
-    can_download = True
-    can_delete = True
 
     def __repr__(self):
         return '<Watcher>'
+
+    def __init__(self, can_upload=True, can_download=True,
+                 can_delete=True, auto_download=False):
+        self.can_upload = can_upload
+        self.can_download = can_download
+        self.can_delete = can_delete
+        self.auto_download = auto_download
 
     def init(self):
         '''
@@ -169,8 +173,6 @@ class Watcher(object):
                                                       '')
             dropbox_from_path = event.src_path.replace(config.path_to_watch,
                                                        '')
-            logger.info('file moved from %s to %s, updating...' %
-                        (dropbox_from_path, dropbox_to_path))
             local_path = event.dest_path
             client.move(local_path, dropbox_from_path, dropbox_to_path)
         except:
@@ -203,31 +205,20 @@ class Watcher(object):
         observer.schedule(event_handler, config.path_to_watch, recursive=True)
         return observer
 
-    def run(self, upload=True, download=True, delete=True,
-            auto_download=False, quick_start=False):
+    def run(self, quick_start=False):
         '''
         run watcher
-        if upload is True, new files will be upload
-        if upload is False, it's download only mode.
-        ----
-        if download is True, files will be downloaded
-        else files will not download.
-        ----
-        if delete is True, delete local file will delete remote
-        else is safe mode, for download only mode.
-
-        NOTE: by default, all options are True and you don't need to care
-        if you use this tool for only download and don't want others
-        remove your file, you can set delete to False.
+        if auto_download is True, then will auto download every [CONFIG] time
+        if quick_start is True, then will not download at first time
         '''
-        self.can_upload = upload
-        self.can_download = download
-        self.can_delete = delete
-        if not upload:
+        if not self.can_upload:
             self.can_delete = False
 
+        logger.info('Watcher auto_download: %s' % self.auto_download)
+
         if not quick_start:
-            if not auto_download:
+            if not self.auto_download:
+                logger.info('Auto download at the first time...')
                 set_upload_lock()
                 self.sync_download()
                 free_upload_lock()
@@ -241,7 +232,7 @@ class Watcher(object):
                 time.sleep(1)
                 time_loop += 1
                 if not time_loop % config.auto_aync_time and config.auto_check:
-                    if not auto_download:
+                    if not self.auto_download:
                         continue
                     set_upload_lock()
                     if get_lock():
@@ -261,3 +252,7 @@ class Watcher(object):
         observer.join()
 
     watch = run
+
+watcher = Watcher(auto_download=True)
+downloader = Watcher(can_upload=False, can_delete=False, auto_download=True)
+uploader = Watcher(can_delete=False, can_download=False)

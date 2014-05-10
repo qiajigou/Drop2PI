@@ -112,21 +112,22 @@ class Client(object):
         '''
         move file from path to to_path
         '''
+        d2_files_list.delete_by_prefix(local_path)
         d2_files_list.delete_by_prefix(path)
         d2_files_list.delete(to_path)
-        return cls._move(local_path, path, to_path)
+        return cls._move(path, to_path)
 
     @classmethod
-    def _move(cls, local_path, path, to_path):
+    def _move(cls, path, to_path):
         logger.info('move %s to %s' % (path, to_path))
         socket.setdefaulttimeout(10)
         client = config.client
         try:
-            client.file_move(path, to_path)
+            r = client.file_move(path, to_path)
+            print r
         except:
+            client.file_delete(path)
             logger.error('move file error')
-        finally:
-            os.system('rm -rf %s' % local_path)
         return True
 
     @classmethod
