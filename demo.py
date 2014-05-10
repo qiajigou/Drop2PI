@@ -86,8 +86,13 @@ if __name__ == '__main__':
     print(help)
     from d2pi.config import config
     if not config.is_useable():
+        from d2pi.auth import warn
+        warn(overwrite=True)
+        print('Done! Run again to auth!')
+    elif not config.has_token():
         from d2pi.auth import auth
         auth()
+        print('Success! Run demo again!')
     else:
         if args and args[0] == '-d':
             print(downloader)

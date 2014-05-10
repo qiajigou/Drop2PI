@@ -49,17 +49,21 @@ class Config(object):
 
     @classmethod
     def create(cls, filename=None, app_key='', app_secret='',
-               access_type='', token=''):
+               access_type='app_folder', token='', path_to_watch='',
+               overwrite=False):
         ensure_dir(get_home('.d2pi'))
         filename = filename if filename else 'config.yml'
         filename = get_home('.d2pi', filename)
-        if not os.path.isfile(filename):
+        if overwrite or not os.path.isfile(filename):
+            # if overwrite config
+            # or os.path.isfile(filename) is not exists
             with open(filename, 'w') as f:
                 f.write("""# Config of d2pi
 # This file is auto generated
 # Just fill app_key and app_secret
 # Do not fill token
 # Leave space between key and value
+
 app_key: %s
 app_secret: %s
 access_type: %s
@@ -67,24 +71,24 @@ token: %s
 delete_local_file: false
 debug: false
 auto_aync_time: 60
-path_to_watch: ''
+path_to_watch: %s
 auto_check: true
 download_max: 2097152
 upload_max: 4194304
-""" % (app_key, app_secret, access_type, token))
+""" % (app_key, app_secret, access_type, token, path_to_watch))
         return cls.get(filename)
 
     @property
     def app_key(self):
-        return str(self._conf.get('app_key', ''))
+        return self._conf.get('app_key') or ''
 
     @property
     def app_secret(self):
-        return str(self._conf.get('app_secret', ''))
+        return self._conf.get('app_secret') or ''
 
     @property
     def path_to_watch(self):
-        path = str(self._conf.get('path_to_watch', ''))
+        path = self._conf.get('path_to_watch') or ''
         if path and path[-1] == '/':
             path = path[:-1]
         return path
@@ -165,10 +169,14 @@ upload_max: 4194304
         return client.DropboxClient(self.access_token)
 
     def is_useable(self):
-        if (self.app_key and
-            self.app_secret and
-            self.path_to_watch and
-                self.token):
+        if (self.app_key
+            and self.app_secret
+                and self.path_to_watch):
+            return True
+        return False
+
+    def has_token(self):
+        if self.token[0] and self.token[1]:
             return True
         return False
 
