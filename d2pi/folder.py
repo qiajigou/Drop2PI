@@ -62,40 +62,55 @@ class Folder(object):
         rs = []
         for c in self.contents:
             if need_dir:
-                if not c.get('is_dir'):
-                    continue
-                hash = c.get('hash')
-                thumb_exists = c.get('thumb_exists')
-                bytes = c.get('bytes')
-                path = c.get('path')
-                is_dir = c.get('is_dir')
-                icon = c.get('icon')
-                root = c.get('root')
-                contents = c.get('contents')
-                is_deleted = c.get('is_deleted', False)
-                rs.append((hash, thumb_exists, bytes,
-                           path, is_dir, icon, root, contents,
-                           is_deleted))
+                try:
+                    if not c.get('is_dir'):
+                        continue
+                    hash = c.get('hash')
+                    thumb_exists = c.get('thumb_exists')
+                    bytes = c.get('bytes')
+                    try:
+                        path = c.get('path')
+                    except:
+                        # python 3 will return bytes
+                        # if not Chinese installed
+                        # will raise error
+                        path = c.get('path').encode('utf-8').decode()
+                    is_dir = c.get('is_dir')
+                    icon = c.get('icon')
+                    root = c.get('root')
+                    contents = c.get('contents')
+                    is_deleted = c.get('is_deleted', False)
+                    rs.append((hash, thumb_exists, bytes,
+                               path, is_dir, icon, root, contents,
+                               is_deleted))
+                except:
+                    pass
             else:
-                if c.get('is_dir'):
-                    continue
-                size = c.get('size')
-                rev = c.get('rev')
-                thumb_exists = c.get('thumb_exists')
-                bytes = c.get('bytes')
-                modified = c.get('modified')
-                mime_type = c.get('mime_type')
-                path = c.get('path')
-                is_dir = c.get('is_dir')
-                icon = c.get('icon')
-                root = c.get('root')
-                is_deleted = c.get('is_deleted', False)
-                client_mtime = c.get('client_mtime')
-                revision = c.get('revision')
-                rs.append((size, rev, thumb_exists, bytes,
-                           modified, mime_type, path, is_dir,
-                           icon, root, client_mtime, revision,
-                           is_deleted))
+                try:
+                    if c.get('is_dir'):
+                        continue
+                    size = c.get('size')
+                    rev = c.get('rev')
+                    thumb_exists = c.get('thumb_exists')
+                    bytes = c.get('bytes')
+                    modified = c.get('modified')
+                    mime_type = c.get('mime_type')
+                    try:
+                        path = c.get('path')
+                    except:
+                        path = c.get('path').encode('utf-8').decode()
+                    is_dir = c.get('is_dir')
+                    icon = c.get('icon')
+                    root = c.get('root')
+                    is_deleted = c.get('is_deleted', False)
+                    client_mtime = c.get('client_mtime')
+                    revision = c.get('revision')
+                    rs.append((size, rev, thumb_exists, bytes,
+                               modified, mime_type, path, is_dir,
+                               icon, root, client_mtime, revision,
+                               is_deleted))
+                except:
+                    pass
         return rs
 
     @classmethod
