@@ -51,7 +51,7 @@ This watcher will watch all events in local like:
 - DELETE FILE/DIR
 - MOVE FILE/DIR
 
-## Important ## 
+## Important ##
 
 The watcher will do anything and watch any events, so:
 
