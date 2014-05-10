@@ -3,7 +3,7 @@
 import os
 import time
 from datetime import datetime
-from client import Client
+from .client import Client
 
 
 class File(object):

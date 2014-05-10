@@ -2,10 +2,10 @@
 
 import os
 
-from config import config
-from cache import d2_dir_cache
+from .config import config
+from .cache import d2_dir_cache
 
-from utils import get_logger
+from .utils import get_logger
 logger = get_logger(config.path_to_watch)
 
 # pylint: disable=E1103
