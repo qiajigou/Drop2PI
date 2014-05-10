@@ -31,7 +31,7 @@ class Folder(object):
 
     @property
     def _files(self):
-        from file import File
+        from .file import File
         rs = self._get_contents(need_dir=False)
         return [File(*r) for r in rs]
 
