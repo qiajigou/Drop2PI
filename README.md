@@ -10,106 +10,80 @@ But I only wants to sync *small* files to Raspberry PI. So I called this Dropbox
 
 Big file is not well supported.
 
-## Overall ##
-
-1. download the file and folder auto.
-2. modify the folder, auto sync to Dropbox.
-3. delete the file or folder which deleted in Dropbox server auto.
-
+Try `python demo.py`.
 
 ## Install ##
 
-You can install by download the source or
+Download the code and:
 
 	python setup.py install
-	
-or
+
+Or using pip:
 
 	pip install d2pi
 
-## V 0.0.9 ##
+## Overall ##
 
-**Changes**:
+In version 0.0.9.2, you can use downloader, uploader and default watcher.
 
-1. add a very simple cache, it's dict in memory.
-2. better sync_download
+downloader:
 
-`sync_download` will be:
+	from d2pi.watch import downloader
+	downloader.run()
 
-1. check metadata and set hash to cache
-2. request dropbox with hash, it no change then return cache object
+downloader will only download files to local automatically.
 
-this will be faster.
+uploader:
+	from d2pi.watch import uploader
+	uploader.run()
 
-and remove `check_dir_deleted`, it will search all folder and sync delete status, may blocked or broken by other events. now new `sync_download` method will handle that.
+uplodaer will only upload files.
 
-If file in dropbox and status `is_deleted` is true, and files/folder exists in local, and config require remove local file, then remove local.
+watcher with auto download:
+	from d2pi.watch import watcher
+    watcher.run()
 
-If file exists in server with no change, return cache object.
+auto download watcher will modify every events and sync to server.
 
-## V 0.0.5 ##
+This watcher will watch all events in local like:
 
-1. make it OO
-2. replace print to logging
+- NEW FILE/DIR
+- DELETE FILE/DIR
+- MOVE FILE/DIR
 
-## V 0.0.4 ##
+## Important ## 
 
-1. set config at ~/.d2pi/config.yml
-2. new dropbox auth method (flow)
+The watcher will do anything and watch any events, so:
 
+It will cache downloaded files and will be flushed when file statue changed.
 
-## Need to do ##
+It have a simple lock, if upload is working, download will be blocked.
 
-1. config the max donload file size.
-2. if there is syncing event, quit update event. (see known bug)
+The same, if auto download is working, then new file could create but upload event will be block.
 
+Because this is a simple tool, will not connect to any server and not be pushed by any server.
 
-## Packages ##
+We don't have better way to solve that problem.
 
-You have to install [Watchdog](https://github.com/gorakhargosh/watchdog) first.
+Why dont't we add a queue and insert event to a queue?
 
-	sudo pip install watchdog
+This tool is using watchdog, everytime download a file it will cause a create file event. Then we will upload file again, with same content.
 
-And also download Dropbox python SDK [HERE](https://www.dropbox.com/developers/core/sdk).
+So we need block something.
 
-	pip install dropbox
+## Customize watcher ##
 
-And yaml.
+You can customize watcher yourself:
 
-## Setup ##
+    def __init__(self, can_upload=True, can_download=True,
+                 can_delete=True, auto_download=False):
+        self.can_upload = can_upload
+        self.can_download = can_download
+        self.can_delete = can_delete
+        self.auto_download = auto_download
 
+So downloader is:
 
-#### init ####
+	downloader = Watcher(can_upload=False, can_delete=False, auto_download=True)
 
-	python auth.py 
-
-or
-
-	from d2pi import auth
-	auth.auth()
-
-
-You have to go to [Dropbox Develop Page](https://www.dropbox.com/developers/apps) to create a App.
-
-After created a App, you can find the APP_KEY and APP_SECRET, ACCESS_TYPE is also needed.
-
-you can edit your config file at `~/.d2pi/config.yml`, path_to_watch is the dir you want to watch.
-
-
-#### run watching.py ####
-
-	python watching.py
-	
-or
-
-	from d2pi import watch
-	watcher = watch.Watcher()
-	watcher.run()
-
-This will watch dir `PATH_TO_WATCH`, and any changes like `create`, `modify`, `delete` and `move` will change the file in Dropbox.
-
-### My PI ###
-
-I need to download some files in my PI, don't need to update or edit on PI. so I just need a cron running on watching.py -c.
-
-soundbbg at gmail
+Any bug, please contact me at soundbbg@gmail.com.

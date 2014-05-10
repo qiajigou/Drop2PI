@@ -20,26 +20,28 @@ class Client(object):
         upload file_name to as_file_name
         '''
         if '.DS_Store' in file_name:
-            return
-        try:
-            d2_files_list.remove(file_name)
-            d2_files_list.remove(as_file_name)
-        except:
-            pass
+            return False
+        d2_files_list.delete(file_name)
+        d2_files_list.delete(as_file_name)
+
+        return cls._upload(file_name, as_file_name)
+
+    @classmethod
+    def _upload(cls, file_name, as_file_name):
         socket.setdefaulttimeout(10)
         client = config.client
         logger.info('upload file %s to %s' % (file_name,
                                               as_file_name))
         try:
             if not client:
-                return
+                return False
             _size = os.path.getsize(file_name)
             _large_file = False
             if _size > config.chunk_upload_max:
                 logger.error('file size is limited, '
                              'should not larger than %s',
                              config.chunk_upload_max)
-                return
+                return False
             if _size > config.upload_max:
                 _large_file = True
             if not _large_file:
@@ -60,16 +62,19 @@ class Client(object):
             logger.info('uploaded')
         except:
             logger.error('upload error')
+            return False
+        return True
 
     @classmethod
     def create_folder(cls, path):
         '''
         create folder
         '''
-        try:
-            d2_files_list.remove(path)
-        except:
-            pass
+        d2_files_list.delete(path)
+        return cls._create_folder(path)
+
+    @classmethod
+    def _create_folder(cls, path):
         logger.info('create folder %s' % path)
         socket.setdefaulttimeout(10)
         client = config.client
@@ -77,42 +82,53 @@ class Client(object):
             client.file_create_folder(path)
         except:
             logger.error('create folder error')
+            return False
+        return True
 
     @classmethod
-    def delete(cls, path):
+    def delete(cls, local_path, server_path):
         '''
         delete a path
         '''
-        try:
-            d2_files_list.remove(path)
-        except:
-            pass
-        logger.info('delete %s' % path)
+        d2_files_list.delete(server_path)
+        d2_files_list.delete_by_prefix(local_path)
+        return cls._delete(local_path, server_path)
+
+    @classmethod
+    def _delete(cls, local_path, server_path):
+        logger.info('delete %s' % local_path)
         socket.setdefaulttimeout(10)
         client = config.client
         try:
-            client.file_delete(path)
+            client.file_delete(server_path)
+            os.system('rm -rf %s' % local_path)
         except:
             logger.error('delete file error')
+            return False
+        return True
 
     @classmethod
-    def move(cls, path, to_path):
+    def move(cls, local_path, path, to_path):
         '''
         move file from path to to_path
         '''
-        try:
-            d2_files_list.remove(path)
-            d2_files_list.remove(to_path)
-        except:
-            pass
+        d2_files_list.delete_by_prefix(local_path)
+        d2_files_list.delete_by_prefix(path)
+        d2_files_list.delete(to_path)
+        return cls._move(path, to_path)
+
+    @classmethod
+    def _move(cls, path, to_path):
         logger.info('move %s to %s' % (path, to_path))
         socket.setdefaulttimeout(10)
         client = config.client
         try:
-            client.file_move(path, to_path)
+            r = client.file_move(path, to_path)
+            print r
         except:
-            cls.delete(path)
+            client.file_delete(path)
             logger.error('move file error')
+        return True
 
     @classmethod
     def download(cls, file_path, save_to_path):
@@ -120,32 +136,40 @@ class Client(object):
         download file from server
         from file_path to save_to_path
         '''
-        if d2_files_list.count(file_path):
+        if d2_files_list.has_value(save_to_path):
             logger.info('file %s in downloded list, not download'
                         % file_path)
-            return
+            return False
+        r = cls._download(file_path, save_to_path)
+        if r:
+            d2_files_list.set(save_to_path)
+        return r
+
+    @classmethod
+    def _download(cls, file_path, save_to_path):
         socket.setdefaulttimeout(10)
         if '/' == save_to_path[-1]:
             save_to_path = save_to_path[:-1]
         client = config.client
         if not client:
-            return
+            return False
         # pylint: disable=E1103
         f, m = client.get_file_and_metadata(file_path)
         if m.get('bytes', 0) > config.download_max:
             Client.prepare_download_bigfile(file_path)
-            return
-        d2_files_list.append(file_path)
+            return False
         logger.info('downloading %s and save to %s' % (file_path,
                                                        save_to_path))
-        with f:
-            d = f.read()
-            with open(save_to_path, 'w') as f:
-                f.write(d)
-            d2_files_list.append(save_to_path)
-            logger.info('downloaded')
-        # pylint: enable=E1103
-        return True
+        try:
+            with f:
+                d = f.read()
+                with open(save_to_path, 'w') as f:
+                    f.write(d)
+                logger.info('downloaded')
+            # pylint: enable=E1103
+            return True
+        except:
+            return False
 
     @classmethod
     def prepare_download_bigfile(cls, file_path):
@@ -153,19 +177,21 @@ class Client(object):
         if download a big file, then share file to a url
         and call Client.download_bigfile
         '''
-        client = config.client
-        try:
-            # pylint: disable=E1103
-            file_url = client.share(file_path)
-            file_url = file_url.get('url', '')
-            # pylint: enable=E1103
-            if file_url:
-                logger.info('file share to %s' % file_url)
-                Client.download_bigfile(file_url)
-            else:
-                logger.info('can not share')
-        except:
-            logger.error('file %s can not share' % file_path)
+        def _prepare_download_bigfile():
+            client = config.client
+            try:
+                # pylint: disable=E1103
+                file_url = client.share(file_path)
+                file_url = file_url.get('url', '')
+                # pylint: enable=E1103
+                if file_url:
+                    logger.info('file share to %s' % file_url)
+                    Client.download_bigfile(file_url)
+                else:
+                    logger.info('can not share')
+            except:
+                logger.error('file %s can not share' % file_path)
+        _prepare_download_bigfile()
 
     @classmethod
     def download_bigfile(cls, file_url):
@@ -201,13 +227,14 @@ class Client(object):
             return
         if path == config.path_to_watch:
             return
+        local_path = path
         path = path.replace(config.path_to_watch, '')
         client = config.client
         try:
             # pylint: disable=E1103
             m = client.metadata(path, include_deleted=True)
             if m.get('is_deleted'):
-                cls.delete(path)
+                cls.delete(local_path, path)
             # pylint: enable=E1103
         except:
             pass
