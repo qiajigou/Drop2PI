@@ -7,13 +7,43 @@ except:
     pass
 # pylint: enable=E0602
 
+from config import config
+
+
+def warn(overwrite=False):
+    print('CONFIG FILE %s ERROR, NOT APP NAME OR SECRET' % config.filename)
+    print('CONFIG FILE Created at %s' % config.filename)
+    print('Please make sure follow config is filled:')
+    print('- app_key:       your dropbox app key')
+    print('- app_secret:    your dropbox app_secret')
+    print('- path_to_watch: your path to watch')
+    if overwrite:
+        app_key = input('Enter the app_key here: ').strip()
+        app_secret = input('Enter the app_secret here: ').strip()
+        path_to_watch = input('Enter the watch full path here '
+                              '(like /home/guojing/somepath):')
+        if not app_key:
+            print('app key should not be empty')
+            return
+        if not app_secret:
+            print('app secret should not be empty')
+            return
+        if not path_to_watch:
+            print('path to watch should not be empty')
+            return
+        print('Write app_key %s, app_secret %s, path_to_watch %s '
+              'to config.' % (app_key, app_secret, path_to_watch))
+        config.create(app_key=app_key,
+                      app_secret=app_secret,
+                      path_to_watch=path_to_watch,
+                      overwrite=overwrite)
+    return
+
 
 def auth():
-    from config import config
     if not config.is_useable():
-        print('CONFIG FILE %s ERROR, NOT APP NAME OR SECRET' % config.filename)
+        warn()
         return
-
     from dropbox import client
     flow = client.DropboxOAuth2FlowNoRedirect(config.app_key,
                                               config.app_secret)
