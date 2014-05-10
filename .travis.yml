@@ -8,7 +8,14 @@ python:
     - 3.2
     - 3.3
 
-install: "pip install -r requirements.txt"
+install:
+    - python setup.py install
+    - pip install pytest
+    - pip install mock
+    - pip install watchdog
+    - pip install dropbox
+    - pip install pylint
+    - pip install --use-mirrors coveralls
 
 script:
     - sh run_lint.sh

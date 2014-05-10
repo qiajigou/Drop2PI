@@ -123,8 +123,7 @@ class Client(object):
         socket.setdefaulttimeout(10)
         client = config.client
         try:
-            r = client.file_move(path, to_path)
-            print r
+            client.file_move(path, to_path)
         except:
             client.file_delete(path)
             logger.error('move file error')
