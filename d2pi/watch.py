@@ -203,7 +203,8 @@ class Watcher(object):
         observer.schedule(event_handler, config.path_to_watch, recursive=True)
         return observer
 
-    def run(self, upload=True, download=True, delete=True):
+    def run(self, upload=True, download=True, delete=True,
+            auto_download=False, quick_start=False):
         '''
         run watcher
         if upload is True, new files will be upload
@@ -225,15 +226,23 @@ class Watcher(object):
         if not upload:
             self.can_delete = False
 
+        if not quick_start:
+            if not auto_download:
+                set_upload_lock()
+                self.sync_download()
+                free_upload_lock()
+
         observer = self.create_observer()
         observer.start()
-
+        logger.info('Start watching...')
         time_loop = 1
         try:
             while True:
                 time.sleep(1)
                 time_loop += 1
                 if not time_loop % config.auto_aync_time and config.auto_check:
+                    if not auto_download:
+                        continue
                     set_upload_lock()
                     if get_lock():
                         logger.info('Something is working, '
