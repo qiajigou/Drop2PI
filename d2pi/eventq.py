@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 # this is a simple event queue
 
-import Queue as _queue
+_queue = None
+try:
+    # python 2
+    import Queue as _queue
+except:
+    # python 3
+    import queue as _queue
 
 
 class EventQueue(object):
