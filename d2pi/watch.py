@@ -153,7 +153,7 @@ class Watcher(object):
             path = event.src_path
             dropbox_path = path.replace(config.path_to_watch, '')
             logger.info('file %s deleted, updating...' % dropbox_path)
-            client.delete(dropbox_path)
+            client.delete(path, dropbox_path)
         except:
             pass
         finally:
@@ -171,7 +171,8 @@ class Watcher(object):
                                                        '')
             logger.info('file moved from %s to %s, updating...' %
                         (dropbox_from_path, dropbox_to_path))
-            client.move(dropbox_from_path, dropbox_to_path)
+            local_path = event.dest_path
+            client.move(local_path, dropbox_from_path, dropbox_to_path)
         except:
             pass
         finally:
