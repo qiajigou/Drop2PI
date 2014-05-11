@@ -1,0 +1,6 @@
+pytest
+mock
+watchdog
+dropbox
+pylint
+PyYAML

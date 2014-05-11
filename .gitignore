@@ -11,7 +11,6 @@
 *.DS_Store
 *.project
 *.un~
-*.txt
 *.db
 *.log
 nohup.out
@@ -22,3 +21,4 @@ dropbox_token.txt
 build
 *.egg-info
 dist
+venv
