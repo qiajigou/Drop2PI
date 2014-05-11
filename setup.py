@@ -39,5 +39,6 @@ setup(
     install_requires=[
         'watchdog',
         'dropbox',
+        'PyYAML',
     ],
 )
