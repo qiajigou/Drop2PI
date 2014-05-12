@@ -47,8 +47,7 @@ class Folder(object):
     def _dirs(self):
         rs = self._get_contents(need_dir=True)
         fs = [Folder(*r) for r in rs]
-        return [Folder.get_by_path(f.path.encode('utf-8'))
-                for f in fs]
+        return fs
 
     @property
     def dirs(self):
@@ -150,7 +149,7 @@ class Folder(object):
 
     @property
     def save_to_dir(self):
-        from config import config
+        from .config import config
         return '%s%s' % (config.path_to_watch, self.path)
 
     def save(self):

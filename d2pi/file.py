@@ -32,11 +32,11 @@ class File(object):
 
     @property
     def save_to_dir(self):
-        from config import config
+        from .config import config
         return '%s%s' % (config.path_to_watch, self.path)
 
     def save(self):
-        from config import config
+        from .config import config
         if self.bytes > config.download_max:
             # if file larger than 2M
             # do not download big file
