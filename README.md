@@ -34,7 +34,7 @@ You could run demo.py three times to generate automatically:
 2. After success and run again, it will ask to auth to dropbox.
 3. After success and run again, it will start demo and download files.
 
-## Config your self ##
+## Config yourself ##
 
 You can do it your self:
 
