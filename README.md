@@ -10,6 +10,8 @@ But I only wants to sync *small* files to Raspberry PI. So I called this Dropbox
 
 Big file is not well supported.
 
+[Donate Me](http://guojing.me/donate/en/) and support my work.
+
 Try `python demo.py`.
 
 ## Install ##
