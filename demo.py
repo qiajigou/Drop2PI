@@ -122,7 +122,7 @@ if __name__ == '__main__':
             print('d2pi already exists, exiting %s' % pidfile)
             sys.exit()
         else:
-            file(pidfile, 'w').write(pid)
+            open(pidfile, 'w').write(pid)
         demo()
     except Exception as e:
         print(e)
