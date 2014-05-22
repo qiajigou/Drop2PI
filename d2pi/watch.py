@@ -275,6 +275,8 @@ class Watcher(object):
 
     watch = run
 
+# this is a sample of watcher
+# use xxx.run() run the watcher
 watcher = Watcher(auto_download=True)
 downloader = Watcher(can_upload=False, can_delete=False, auto_download=True)
 uploader = Watcher(can_delete=False, can_download=False)
