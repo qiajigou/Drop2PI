@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 
 welcome = """
@@ -58,7 +59,7 @@ it will cause a create file event. Then we will upload
 file again, with same content.
 """
 
-watcher = """
+simple_watcher = """
 This is the watcher with no auto download.
 
 It will download and sync to server at first time
@@ -79,7 +80,8 @@ uploader:   demo.py -u
 watcher:    demo.py -w
 """
 
-if __name__ == '__main__':
+
+def demo():
     print(welcome)
     args = sys.argv
     args = args[1:]
@@ -107,7 +109,25 @@ if __name__ == '__main__':
             from d2pi.watch import watcher
             watcher.run()
         else:
-            print(watcher)
+            print(simple_watcher)
             from d2pi.watch import watcher
             watcher.auto_download = False
             watcher.run()
+
+if __name__ == '__main__':
+    try:
+        pid = str(os.getpid())
+        pidfile = '/tmp/d2pi.pid'
+        if os.path.isfile(pidfile):
+            print('d2pi already exists, exiting %s' % pidfile)
+            sys.exit()
+        else:
+            open(pidfile, 'w').write(pid)
+        demo()
+    except Exception as e:
+        print(e)
+    finally:
+        try:
+            os.unlink(pidfile)
+        except:
+            pass
