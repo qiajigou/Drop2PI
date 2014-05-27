@@ -54,5 +54,13 @@ class _D2FilesListCache(object):
     def clear(self):
         self._l = []
 
+    def save(self):
+        # TODO: we could save cache to local as file
+        pass
+
+    def load(self):
+        # TODO: we could load cache when init
+        pass
+
 d2_files_list = _D2FilesListCache()
 d2_dir_cache = _D2DirDictCache()
