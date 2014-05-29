@@ -244,7 +244,7 @@ class Watcher(object):
                 set_upload_lock()
                 self.sync_download()
                 free_upload_lock()
-
+        # d2_files_list.load()
         observer = self.create_observer()
         observer.start()
         logger.info('Start watching...')
@@ -265,6 +265,7 @@ class Watcher(object):
                     logger.info('Auto sync every %s second' %
                                 config.auto_aync_time)
                     self.sync_download()
+                    # d2_files_list.save()
                     # client.check_dir_deleted()
                     free_upload_lock()
                     queue.run()
