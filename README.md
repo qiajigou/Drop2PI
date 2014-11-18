@@ -40,14 +40,14 @@ You could run demo.py three times to generate automatically:
 
 You can do it your self:
 
-    from d2pi.auto import auth
+    from d2pi.auth import auth
     auth()
 
 It will ask you to fill the app\_key and secret and watch path your self.
 
 After fill up, restart terminal bash and:
 
-    from d2pi.auto import auth
+    from d2pi.auth import auth
     auth()
 
 Run again.

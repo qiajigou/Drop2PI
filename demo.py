@@ -87,6 +87,7 @@ def demo():
     args = args[1:]
     print(help)
     from d2pi.config import config
+    print(config.is_useable())
     if not config.is_useable():
         from d2pi.auth import warn
         warn(overwrite=True)
@@ -97,19 +98,15 @@ def demo():
         print('Success! Run demo again!')
     else:
         if args and args[0] == '-d':
-            print(downloader)
             from d2pi.watch import downloader
             downloader.run()
         elif args and args[0] == '-u':
-            print(uploader)
             from d2pi.watch import uploader
             uploader.run()
         elif args and args[0] == '-w':
-            print(auto_downloader)
             from d2pi.watch import watcher
             watcher.run()
         else:
-            print(simple_watcher)
             from d2pi.watch import watcher
             watcher.auto_download = False
             watcher.run()
