@@ -136,7 +136,7 @@ class Client(object):
         from file_path to save_to_path
         '''
         if d2_files_list.has_value(save_to_path):
-            logger.info('file %s in downloded list, not download'
+            logger.info('file %s in downloaded list, not download'
                         % file_path)
             return False
         r = cls._download(file_path, save_to_path)
