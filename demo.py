@@ -52,9 +52,9 @@ any server and not be pushed by any server
 
 So we don't have better way to solve that problem.
 
-Why dont't we add a queue and insert event to a queue?
+Why don't we add a queue and insert event to a queue?
 
-This tool is using watchdog, everytime download a file
+This tool is using watchdog, every time download a file
 it will cause a create file event. Then we will upload
 file again, with same content.
 """

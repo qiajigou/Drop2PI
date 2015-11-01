@@ -8,7 +8,7 @@ This is a very simple tool to sync files between Dropbox and Raspberry PI. In fa
 
 But I only wants to sync *small* files to Raspberry PI. So I called this Dropbox to PI.
 
-Big file is not well supported.
+Big files are not well supported.
 
 [Donate Me](http://guojing.me/donate/en/) and support my work.
 
@@ -72,7 +72,7 @@ uploader:
 	from d2pi.watch import uploader
 	uploader.run()
 
-uplodaer will only upload files.
+uploader will only upload files.
 
 watcher with auto download:
 
@@ -101,9 +101,9 @@ Because this is a simple tool, will not connect to any server and not be pushed 
 
 We don't have better way to solve that problem.
 
-Why dont't we add a queue and insert event to a queue?
+Why don't we add a queue and insert event to a queue?
 
-This tool is using watchdog, everytime download a file it will cause a create file event. Then we will upload file again, with same content.
+This tool is using watchdog, every file download will cause a create file event. Then we will upload file again, with same content.
 
 So we need block something.
 
