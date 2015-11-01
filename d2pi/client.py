@@ -11,14 +11,14 @@ logger = get_logger(config.path_to_watch)
 
 
 class Client(object):
-    '''
+    """
     A simple interface of Dropbox Client
-    '''
+    """
     @classmethod
     def upload(cls, file_name, as_file_name):
-        '''
+        """
         upload file_name to as_file_name
-        '''
+        """
         if '.DS_Store' in file_name:
             return False
         d2_files_list.delete(file_name)
@@ -67,9 +67,9 @@ class Client(object):
 
     @classmethod
     def create_folder(cls, path):
-        '''
+        """
         create folder
-        '''
+        """
         d2_files_list.delete(path)
         return cls._create_folder(path)
 
@@ -87,9 +87,9 @@ class Client(object):
 
     @classmethod
     def delete(cls, local_path, server_path):
-        '''
+        """
         delete a path
-        '''
+        """
         d2_files_list.delete(server_path)
         d2_files_list.delete_by_prefix(local_path)
         return cls._delete(local_path, server_path)
@@ -109,9 +109,9 @@ class Client(object):
 
     @classmethod
     def move(cls, local_path, path, to_path):
-        '''
+        """
         move file from path to to_path
-        '''
+        """
         d2_files_list.delete_by_prefix(local_path)
         d2_files_list.delete_by_prefix(path)
         d2_files_list.delete(to_path)
@@ -131,10 +131,10 @@ class Client(object):
 
     @classmethod
     def download(cls, file_path, save_to_path):
-        '''
+        """
         download file from server
         from file_path to save_to_path
-        '''
+        """
         if d2_files_list.has_value(save_to_path):
             logger.info('file %s in downloaded list, not download'
                         % file_path)
@@ -172,10 +172,10 @@ class Client(object):
 
     @classmethod
     def prepare_download_bigfile(cls, file_path):
-        '''
+        """
         if download a big file, then share file to a url
         and call Client.download_bigfile
-        '''
+        """
         def _prepare_download_bigfile():
             client = config.client
             try:
@@ -194,21 +194,21 @@ class Client(object):
 
     @classmethod
     def download_bigfile(cls, file_url):
-        '''
+        """
         overwrite this method to download big file
-        '''
+        """
         logger.info('start download big file on url %s' % file_url)
         logger.info('overwrite this method to download')
 
     @classmethod
     def check_dir_deleted(cls, path=''):
-        '''
+        """
         check dir is is_deleted
         if is deleted in server
         local path should be deleted too
         but if config.delete_local_file is False
         this will not delete file
-        '''
+        """
         socket.setdefaulttimeout(10)
         path = path or config.path_to_watch
 

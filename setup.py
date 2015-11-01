@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 
-install_description = '''
+install_description = """
 d2pi
 =====
 
@@ -14,7 +14,7 @@ Installation
 
 You can get the code from `https://github.com/GuoJing/Drop2PI`
 
-'''
+"""
 
 setup(
     name='d2pi',
