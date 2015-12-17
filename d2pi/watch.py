@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import shutil
 import os
 import time
 from .config import config
@@ -62,14 +63,14 @@ class Watcher(object):
             _path = config.path_to_watch + f.path
             if os.path.exists(_path):
                 logger.info('rm %s' % _path)
-                os.system('rm %s' % _path)
+                os.remove(_path)
         for d in folder.deleted_dirs:
             if f.path in ('/', config.path_to_watch):
                 continue
             _path = config.path_to_watch + d.path
             if os.path.exists(_path):
                 logger.info('rm -rf %s' % _path)
-                os.system('rm -rf %s' % _path)
+                shutil.rmtree(_path)
 
     def clean(self):
         '''
@@ -77,7 +78,7 @@ class Watcher(object):
         '''
         if os.path.exists(config.path_to_watch):
             logger.info('rm -rf %s' % config.path_to_watch)
-            os.system('rm -rf %s' % config.path_to_watch)
+            shutil.rmtree(config.path_to_watch)
 
     def sync_download(self):
         '''
