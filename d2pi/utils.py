@@ -4,10 +4,10 @@ import logging
 
 
 def parse_file_dir(file_path):
-    '''
+    """
     input:  /some1/some2/filename.txt
     return: filename.txt
-    '''
+    """
     f = file_path.split('/')
     return f[-1]
 

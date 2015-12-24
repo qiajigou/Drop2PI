@@ -21,9 +21,9 @@ queue = EventQueue(100)
 
 
 class Watcher(object):
-    '''
+    """
     This is Watcher Object of DROP2PI
-    '''
+    """
     observer = None
 
     def __repr__(self):
@@ -37,17 +37,17 @@ class Watcher(object):
         self.auto_download = auto_download
 
     def init(self):
-        '''
+        """
         init path of watching dir
-        '''
+        """
         if not os.path.exists(config.path_to_watch):
             logger.info('mkdir %s' % config.path_to_watch)
             os.makedirs(config.path_to_watch)
 
     def sync(self, folder):
-        '''
+        """
         sync files
-        '''
+        """
         for f in folder.files:
             f.save()
         for d in folder.dirs:
@@ -73,17 +73,17 @@ class Watcher(object):
                 shutil.rmtree(_path)
 
     def clean(self):
-        '''
+        """
         remove all files in watching dir
-        '''
+        """
         if os.path.exists(config.path_to_watch):
             logger.info('rm -rf %s' % config.path_to_watch)
             shutil.rmtree(config.path_to_watch)
 
     def sync_download(self):
-        '''
+        """
         start to download all files in watching dir
-        '''
+        """
         if not self.can_download:
             logger.info('Download mode is disabled, will not download.')
             return
@@ -100,9 +100,9 @@ class Watcher(object):
             free_lock()
 
     def sync_upload(self, event):
-        '''
+        """
         upload event
-        '''
+        """
         if not self.can_upload:
             logger.info('Upload mode is disabled, will not upload.')
             return
@@ -127,9 +127,9 @@ class Watcher(object):
             free_lock()
 
     def sync_create(self, event):
-        '''
+        """
         create event
-        '''
+        """
         if not self.can_upload:
             logger.info('Upload mode is disabled, will not upload.')
             return
@@ -156,9 +156,9 @@ class Watcher(object):
             free_lock()
 
     def sync_delete(self, event):
-        '''
+        """
         delete event
-        '''
+        """
         if not self.can_delete:
             # disable delete files to server is safe mode
             logger.info('Delete mode is disabled, will not delete.')
@@ -180,9 +180,9 @@ class Watcher(object):
             free_lock()
 
     def sync_move(self, event):
-        '''
+        """
         move event
-        '''
+        """
         try:
             set_lock()
             try:
@@ -204,15 +204,15 @@ class Watcher(object):
             free_lock()
 
     def sync_any_event(self, event):
-        '''
+        """
         any event on a dir
         this method will be called
-        '''
+        """
 
     def create_observer(self):
-        '''
+        """
         create a watchdog observer
-        '''
+        """
         logger.info('Start watching %s' % config.path_to_watch)
         logging.basicConfig(level=logging.INFO,
                             format='%(asctime)s - %(message)s',
@@ -229,11 +229,11 @@ class Watcher(object):
         return observer
 
     def run(self, quick_start=False):
-        '''
+        """
         run watcher
         if auto_download is True, then will auto download every [CONFIG] time
         if quick_start is True, then will not download at first time
-        '''
+        """
         if not self.can_upload:
             self.can_delete = False
 
