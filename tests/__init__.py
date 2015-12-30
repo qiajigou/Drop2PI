@@ -5,7 +5,10 @@ from sys import version_info
 __all__ = ['unittest']
 
 if version_info < (2, 7):
-    import unittest2 as unittest
+    try:
+        import unittest2 as unittest
+    except:
+        import unittest
 else:
     import unittest
 
