@@ -1,174 +1,178 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-  <title>Drop2Pi Project</title>
-  <meta charset="utf-8" />
-<link rel="alternate" type="application/atom+xml" title="Recent Entries" href="/feed.xml">
-<link rel="icon" href="/images/icons/avatar.png">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="/style/css/bootstrap.css" type="text/css" media="screen">
-<script type="text/javascript" src="/style/jquery-1.7.1.min.js"></script>
-<link rel="stylesheet" href="/style/style.css" type="text/css">
-<meta content="GuoJing的博客，关于设计，开发以及生活。" name="description"/>
-<meta content="设计,开发,思考,生活,豆瓣,读书,电影,音乐,游记" name="keywords"/>
-<script>
- $(document).ready(function(){
-	$('.nav a').hover(
-		function(){
-			$(this).animate({opacity: 0.3}, 400)
-		}, 
-		function(){
-			$(this).animate({opacity: 1}, 400)
-		});
- });
- function getURLParameter(name) {
-    return decodeURI(
-        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
-    );
- }
-</script>
-<style>
-    .content img {
-        width: auto;
-    }
-</style>
-</head>
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Drop2pi by qiajigou</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Drop2pi</h1>
+      <h2 class="project-tagline">This is a simple Dropbox Client tool to sync files to Raspberry PI.</h2>
+      <a href="https://github.com/qiajigou/Drop2PI" class="btn">View on GitHub</a>
+      <a href="https://github.com/qiajigou/Drop2PI/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/qiajigou/Drop2PI/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-<body>
+    <section class="main-content">
+      <h2>
+<a id="drop2pi" class="anchor" href="#drop2pi" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Drop2PI</h2>
 
-<div class="container">
-<div class="banner">
- <ul class="nav nav-pills">
-  <li><a href="/">Blog</a></li>
-  <li><a href="https://github.com/GuoJing/Drop2PI">Github</a></li>
- </ul> 
-</div>
+<p><a href="https://travis-ci.org/GuoJing/Drop2PI"><img src="https://travis-ci.org/GuoJing/Drop2PI.png?branch=master" alt="Build Status"></a> <a href="https://bitdeli.com/free" title="Bitdeli Badge"><img src="https://d2weczhvl823v0.cloudfront.net/GuoJing/drop2pi/trend.png" alt="Bitdeli Badge"></a></p>
 
-<div class="main clearfix">
-
-
-<div class="posts">
-<div class="title">Drop2Pi</div>
-<div class="content">
+<p>Sorry for bad English.</p>
 
 <p>This is a very simple tool to sync files between Dropbox and Raspberry PI. In fact this command tools can used any system running on Python.</p>
 
-<p>But I only wants to sync files to Raspberry PI. So I called this Dropbox to PI.</p>
+<p>But I only wants to sync <em>small</em> files to Raspberry PI. So I called this Dropbox to PI.</p>
 
-<h3>Overall</h3>
+<p>Big files are not well supported.</p>
 
-<ol>
-<li>download the file and folder auto.</li>
-<li>modify the folder, auto sync to Dropbox.</li>
-<li>delete the file or folder which deleted in Dropbox server auto.</li>
-</ol>
+<p><a href="http://guojing.me/donate/en/">Donate Me</a> and support my work.</p>
 
-<h3>Install</h3>
+<p>Try <code>python demo.py</code>.</p>
 
-<p>You can install by download the source or</p>
+<h2>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install</h2>
+
+<p>Download the code and:</p>
 
 <pre><code>python setup.py install
 </code></pre>
 
-<p>or</p>
+<p>Or using pip:</p>
 
 <pre><code>pip install d2pi
 </code></pre>
 
-<h3>V 0.0.5</h3>
-
-<ol>
-<li>make it OO</li>
-<li>replace print to logging</li>
-</ol>
-
-<h3>V 0.0.4</h3>
-
-<ol>
-<li>set config at ~/.d2pi/config.yml</li>
-<li>new dropbox auth method (flow)</li>
-</ol>
-
-<h3>Need to do</h3>
-
-<ol>
-<li>config the max donload file size.</li>
-<li>if there is syncing event, quit update event. (see known bug)</li>
-</ol>
-
-<h3>Packages</h3>
-
-<p>You have to install <a href="https://github.com/gorakhargosh/watchdog">Watchdog</a> first.</p>
-
-<pre><code>sudo pip install watchdog
-</code></pre>
-
-<p>And also download Dropbox python SDK <a href="https://www.dropbox.com/developers/core/sdk">HERE</a>.</p>
-
-<pre><code>pip install dropbox
-</code></pre>
-
-<p>And yaml.</p>
-
-<h3>Setup</h3>
-
-<h4>init</h4>
-
-<pre><code>python auth.py 
-</code></pre>
-
-<p>or</p>
-
-<pre><code>from d2pi import auth
-auth.auth()
-</code></pre>
+<h2>
+<a id="config" class="anchor" href="#config" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Config</h2>
 
 <p>You have to go to <a href="https://www.dropbox.com/developers/apps">Dropbox Develop Page</a> to create a App.</p>
 
-<p>After created a App, you can find the APP<em>KEY and APP</em>SECRET, ACCESS_TYPE is also needed.</p>
+<p>After created a App, you can find <code>APP_KEY</code> and <code>APP_SECRET</code>.</p>
 
-<p>you can edit your config file at <code>~/.d2pi/config.yml</code>, path<em>to</em>watch is the dir you want to watch.</p>
+<p>You could run demo.py three times to generate automatically:</p>
 
-<h4>run watching.py</h4>
+<ol>
+<li>First time it will ask you to fill app_key and app_secret and path_to_watch.</li>
+<li>After success and run again, it will ask to auth to dropbox.</li>
+<li>After success and run again, it will start demo and download files.</li>
+</ol>
 
-<pre><code>python watching.py
+<h2>
+<a id="config-yourself" class="anchor" href="#config-yourself" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Config yourself</h2>
+
+<p>You can do it your self:</p>
+
+<pre><code>from d2pi.auth import auth
+auth()
 </code></pre>
 
-<p>or</p>
+<p>It will ask you to fill the app_key and secret and watch path your self.</p>
 
-<pre><code>from d2pi import watch
-watcher = watch.Watcher()
+<p>After fill up, restart terminal bash and:</p>
+
+<pre><code>from d2pi.auth import auth
+auth()
+</code></pre>
+
+<p>Run again.</p>
+
+<p>This will generate config automatically, remember root user's config is not the same path with normal user.</p>
+
+<p>Or you can edit your config file at <code>~/.d2pi/config.yml</code>, <code>path_to_watch</code> is the dir you want to watch.</p>
+
+<h2>
+<a id="overall" class="anchor" href="#overall" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Overall</h2>
+
+<p>In version 0.0.9.2, you can use downloader, uploader and default watcher.</p>
+
+<p>downloader:</p>
+
+<pre><code>from d2pi.watch import downloader
+downloader.run()
+</code></pre>
+
+<p>downloader will only download files to local automatically.</p>
+
+<p>uploader:</p>
+
+<pre><code>from d2pi.watch import uploader
+uploader.run()
+</code></pre>
+
+<p>uploader will only upload files.</p>
+
+<p>watcher with auto download:</p>
+
+<pre><code>from d2pi.watch import watcher
 watcher.run()
 </code></pre>
 
-<p>This will watch dir <code>PATH_TO_WATCH</code>, and any changes like <code>create</code>, <code>modify</code>, <code>delete</code> and <code>move</code> will change the file in Dropbox.</p>
+<p>auto download watcher will modify every events and sync to server.</p>
 
-<h3>My PI</h3>
+<p>This watcher will watch all events in local like:</p>
 
-<p>I need to download some files in my PI, don&#39;t need to update or edit on PI. so I just need a cron running on watching.py -c.</p>
+<ul>
+<li>NEW FILE/DIR</li>
+<li>DELETE FILE/DIR</li>
+<li>MOVE FILE/DIR</li>
+</ul>
 
-<p>soundbbg at gmail</p>
+<h2>
+<a id="important" class="anchor" href="#important" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Important</h2>
 
-<p><a href="https://travis-ci.org/GuoJing/Drop2PI"><img src="https://travis-ci.org/GuoJing/Drop2PI.png?branch=master" alt="Build Status"></a></p>
+<p>The watcher will do anything and watch any events, so:</p>
 
-</div>
+<p>It will cache downloaded files and will be flushed when file statue changed.</p>
 
-<div class="footer">
+<p>It have a simple lock, if upload is working, download will be blocked.</p>
 
-© Copryright by<a href="http://guojing.me/" target="_blank">GuoJing</a> 2012-2014 using <a href="http://www.github.com/" target="_blank">GitHub</a> and <a href="http://guojing.me/duidui" target="_blank">duidui</a>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+<p>The same, if auto download is working, then new file could create but upload event will be block.</p>
 
-  ga('create', 'UA-42721249-1', 'guojing.me');
-  ga('send', 'pageview');
+<p>Because this is a simple tool, will not connect to any server and not be pushed by any server.</p>
 
-</script>
-</div>
+<p>We don't have better way to solve that problem.</p>
 
-</div>
-</body>
+<p>Why don't we add a queue and insert event to a queue?</p>
+
+<p>This tool is using watchdog, every file download will cause a create file event. Then we will upload file again, with same content.</p>
+
+<p>So we need block something.</p>
+
+<h2>
+<a id="customize-watcher" class="anchor" href="#customize-watcher" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Customize watcher</h2>
+
+<p>You can customize watcher yourself:</p>
+
+<pre><code>def __init__(self, can_upload=True, can_download=True,
+             can_delete=True, auto_download=False):
+    self.can_upload = can_upload
+    self.can_download = can_download
+    self.can_delete = can_delete
+    self.auto_download = auto_download
+</code></pre>
+
+<p>So downloader is:</p>
+
+<pre><code>downloader = Watcher(can_upload=False, can_delete=False, auto_download=True)
+</code></pre>
+
+<p>Any bug, please contact me at <a href="mailto:soundbbg@gmail.com">soundbbg@gmail.com</a>.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/qiajigou/Drop2PI">Drop2pi</a> is maintained by <a href="https://github.com/qiajigou">qiajigou</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
 </html>
-
